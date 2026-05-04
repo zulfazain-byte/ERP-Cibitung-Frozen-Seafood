@@ -96,6 +96,47 @@ CFS.Sales = {
         if (filters.startDate) trx = trx.filter(t => new Date(t.tanggal) >= new Date(filters.startDate));
         if (filters.endDate) trx = trx.filter(t => new Date(t.tanggal) <= new Date(filters.endDate));
         return trx;
+
+    // Di dalam CFS.Sales, setelah fungsi getFilteredTransactions
+renderCustomerTable: async function() {
+    const customers = await this.getCustomers();
+    const tbody = document.getElementById('crmTableBody');
+    if (!tbody) return;
+
+    if (customers.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="5" class="text-center p-4 opacity-50">Belum ada data pelanggan.</td></tr>';
+        return;
+    }
+
+    // Update stats
+    const totalPendapatan = customers.reduce((s, c) => s + c.totalPembelian, 0);
+    const now = new Date();
+    const thirtyDaysAgo = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 30);
+    const activeCustomers = customers.filter(c => new Date(c.terakhirBeli) > thirtyDaysAgo).length;
+
+    const statsTotal = document.getElementById('crmTotalCustomers');
+    const statsRevenue = document.getElementById('crmTotalRevenue');
+    const statsActive = document.getElementById('crmActiveCustomers');
+    if (statsTotal) statsTotal.textContent = customers.length;
+    if (statsRevenue) statsRevenue.textContent = CFS.Utils.formatRupiah(totalPendapatan);
+    if (statsActive) statsActive.textContent = activeCustomers;
+
+    tbody.innerHTML = customers
+        .sort((a, b) => new Date(b.terakhirBeli) - new Date(a.terakhirBeli))
+        .map(c => {
+            const lastBuy = new Date(c.terakhirBeli);
+            const daysSinceLastBuy = Math.floor((now - lastBuy) / (1000 * 60 * 60 * 24));
+            const status = daysSinceLastBuy > 30 ? '⚠️ Churn Risk' : '✅ Aktif';
+            const statusColor = daysSinceLastBuy > 30 ? 'text-red-600' : 'text-green-600';
+            return `<tr class="border-b hover:bg-slate-50 dark:hover:bg-slate-800">
+                <td class="p-2 font-medium">${c.nama}</td>
+                <td class="p-2 text-right">${CFS.Utils.formatRupiah(c.totalPembelian)}</td>
+                <td class="p-2 text-right">${c.totalTransaksi}</td>
+                <td class="p-2 text-right text-xs">${CFS.Utils.formatDate(c.terakhirBeli)}</td>
+                <td class="p-2 text-center"><span class="${statusColor} text-xs font-semibold">${status}</span></td>
+            </tr>`;
+        }).join('');
+}
     },
 
     // --- CRM Functions ---
