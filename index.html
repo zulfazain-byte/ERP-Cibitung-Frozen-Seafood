@@ -663,10 +663,13 @@
                 </button>
                 
                 <!-- Placeholder untuk modul mendatang -->
-                <div class="placeholder-section mt-4 p-3 text-xs">
-                    <i class="ph ph-plus-circle text-xl mb-1 block"></i>
-                    <p class="font-medium">Modul Tambahan</p>
-                    <p class="mt-1 opacity-60">CRM • Analitik Lanjutan • Integrasi API</p>
+               <div class="mt-4 space-y-1">
+                <button onclick="switchTab('tab-crm')" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-left text-sm font-medium opacity-70 hover:opacity-100 transition hover:bg-slate-50 dark:hover:bg-slate-800">
+                <i class="ph ph-users text-lg"></i> CRM Pelanggan
+                </button>
+                <button onclick="switchTab('tab-reports')" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-left text-sm font-medium opacity-70 hover:opacity-100 transition hover:bg-slate-50 dark:hover:bg-slate-800">
+                <i class="ph ph-file-text text-lg"></i> Laporan Keuangan
+                </button>
                 </div>
             </nav>
             
