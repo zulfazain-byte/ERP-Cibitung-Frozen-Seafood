@@ -253,6 +253,146 @@ CFS.App = {
         };
     },
 
+    // Di dalam CFS.App.init(), tambahkan setelah this.setupBackup():
+this.setupAuthUI();
+this.setupIntegrationsTab();
+this.setupShortcuts();
+// Notifikasi kadaluarsa dan peramalan
+this.startBackgroundTasks();
+
+// Fungsi baru:
+CFS.App.setupAuthUI = function() {
+    // Tampilkan/tutup tombol berdasarkan role
+    const user = CFS.Auth.getCurrentUser();
+    if (!user || !user.role.canEditSettings) {
+        document.getElementById('settingsTab')?.classList.add('hidden');
+    }
+    if (!user || !user.role.canViewReports) {
+        document.querySelector('[data-tab="tab-reports"]')?.classList.add('hidden');
+    }
+    // Tombol login/logout di nav
+    const loginBtn = document.createElement('button');
+    loginBtn.id = 'loginBtn';
+    loginBtn.className = 'btn btn-secondary text-sm py-2 px-3';
+    loginBtn.innerHTML = '<i class="ph ph-sign-in"></i> Login';
+    loginBtn.onclick = () => CFS.App.showLoginModal();
+    document.querySelector('nav .flex.items-center.gap-2')?.prepend(loginBtn);
+    
+    if (CFS.Auth.currentUser) {
+        loginBtn.innerHTML = `<i class="ph ph-user"></i> ${CFS.Auth.currentUser.username} (Logout)`;
+        loginBtn.onclick = () => { CFS.Auth.logout(); location.reload(); };
+    }
+};
+
+CFS.App.showLoginModal = function() {
+    const modal = document.createElement('div');
+    modal.className = 'modal-backdrop';
+    modal.innerHTML = `
+        <div class="card p-6 w-80">
+            <h3 class="font-bold mb-4">Login</h3>
+            <input type="text" id="loginUsername" placeholder="Username" class="mb-2">
+            <input type="password" id="loginPin" placeholder="PIN" class="mb-4" maxlength="4">
+            <button id="loginSubmit" class="btn btn-primary w-full">Masuk</button>
+        </div>`;
+    document.body.appendChild(modal);
+    document.getElementById('loginSubmit').addEventListener('click', async () => {
+        const user = document.getElementById('loginUsername').value;
+        const pin = document.getElementById('loginPin').value;
+        const success = await CFS.Auth.login(user, pin);
+        if (success) {
+            modal.remove();
+            showToast('Sukses', 'Login berhasil', 'success');
+            location.reload();
+        } else {
+            showToast('Gagal', 'Username atau PIN salah', 'error');
+        }
+    });
+};
+
+CFS.App.setupIntegrationsTab = function() {
+    // Tambah tab "Integrasi" di sidebar secara dinamis
+    const tabs = document.getElementById('tabs');
+    const btn = document.createElement('button');
+    btn.onclick = () => switchTab('tab-integrations');
+    btn.dataset.tab = 'tab-integrations';
+    btn.className = 'tab-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl text-left transition opacity-70 hover:opacity-100';
+    btn.innerHTML = '<i class="ph ph-plugs-connected text-lg"></i> Integrasi';
+    tabs.insertBefore(btn, tabs.querySelector('.placeholder-section'));
+    
+    // Buat konten tab
+    const main = document.querySelector('main');
+    const div = document.createElement('div');
+    div.id = 'tab-integrations';
+    div.className = 'tab-content space-y-6';
+    div.innerHTML = `
+        <div class="card p-6">
+            <h2 class="text-xl font-bold mb-4">🔌 Integrasi & API</h2>
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium mb-2">Webhook URL (Discord/Zapier)</label>
+                    <input type="url" id="webhookURL" placeholder="https://..." class="w-full">
+                    <button id="saveWebhookBtn" class="btn btn-primary mt-2">Simpan</button>
+                </div>
+                <hr>
+                <div>
+                    <h3 class="font-semibold mb-2">Cek Harga Pasar</h3>
+                    <select id="marketFishSelect" class="w-full mb-2">
+                        ${CFS.Inventory.PRODUCT_LIST.map(p => `<option>${p}</option>`).join('')}
+                    </select>
+                    <button id="checkMarketBtn" class="btn btn-secondary">Cek Harga</button>
+                    <p id="marketPriceResult" class="mt-2 text-sm"></p>
+                </div>
+                <hr>
+                <div>
+                    <h3 class="font-semibold mb-2">Simulasi Kirim Data Penjualan</h3>
+                    <button id="testWebhookBtn" class="btn btn-secondary">Kirim Penjualan Terakhir</button>
+                </div>
+            </div>
+        </div>`;
+    main.appendChild(div);
+    
+    // Event listener
+    document.getElementById('saveWebhookBtn')?.addEventListener('click', () => {
+        CFS.API.setWebhookURL(document.getElementById('webhookURL').value);
+        showToast('Tersimpan', 'Webhook URL disimpan', 'success');
+    });
+    document.getElementById('webhookURL').value = CFS.API.getWebhookURL();
+    
+    document.getElementById('checkMarketBtn')?.addEventListener('click', async () => {
+        const fish = document.getElementById('marketFishSelect').value;
+        const price = await CFS.API.getMarketPrice(fish);
+        document.getElementById('marketPriceResult').innerText = `Harga pasar ${fish}: ${CFS.Utils.formatRupiah(price)}/kg`;
+    });
+    
+    document.getElementById('testWebhookBtn')?.addEventListener('click', async () => {
+        const trx = (await CFS.Storage.get(CFS.Storage.TRANSACTIONS_KEY))?.[0];
+        if (!trx) return showToast('Gagal', 'Tidak ada transaksi', 'error');
+        const success = await CFS.API.sendSalesWebhook(trx);
+        showToast(success ? 'Sukses' : 'Gagal', success ? 'Webhook terkirim' : 'Periksa URL', success ? 'success' : 'error');
+    });
+};
+
+CFS.App.startBackgroundTasks = function() {
+    // Cek batch kadaluarsa setiap jam
+    setInterval(async () => {
+        const expiring = await CFS.Inventory.getExpiringBatches(3);
+        if (expiring.length > 0) {
+            window.updateNotifBadge(expiring.length);
+            // Tambahkan ke notifikasi panel
+            const notifList = document.getElementById('notifList');
+            if (notifList) notifList.innerHTML = expiring.map(b => `<p class="text-red-600">⚠ ${b.produk} exp ${b.tgl_kadaluarsa}</p>`).join('');
+        }
+    }, 3600000);
+};
+
+CFS.App.setupShortcuts = function() {
+    document.addEventListener('keydown', (e) => {
+        if (e.ctrlKey && e.key === 'b') { e.preventDefault(); CFS.App.backupData(); }
+        if (e.ctrlKey && e.key === 'd') { e.preventDefault(); switchTab('tab-dashboard'); }
+        if (e.ctrlKey && e.key === 's') { e.preventDefault(); switchTab('tab-sales'); }
+    });
+};
+    
     setupBatchModal() {
         const select = document.getElementById('batchProdukSelect');
         select.addEventListener('change', async () => {
