@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cibitung Frozen — ERP Ultimate v5.0</title>
+    <title>Cibitung Frozen — ERP Ultimate v5.2</title>
     <meta name="description" content="Sistem ERP manajemen inventori, penjualan, dan akuntansi Cibitung Frozen.">
     <meta name="theme-color" content="#2563eb">
     <meta name="application-name" content="CibitungFrozen ERP">
@@ -128,7 +128,9 @@
             box-shadow: 0 4px 12px rgba(0,0,0,0.08);
         }
 
-        input, select, textarea {
+        input,
+        select,
+        textarea {
             background: var(--surface);
             color: var(--text);
             border: 1px solid var(--border);
@@ -141,7 +143,9 @@
             width: 100%;
         }
 
-        input:focus, select:focus, textarea:focus {
+        input:focus,
+        select:focus,
+        textarea:focus {
             border-color: var(--accent);
             box-shadow: 0 0 0 3px rgba(37,99,235,0.1);
         }
@@ -204,6 +208,11 @@
             background-color: #b91c1c;
         }
 
+        .btn-sm {
+            padding: 0.375rem 0.75rem;
+            font-size: 0.75rem;
+        }
+
         .toggle-checkbox {
             width: 1.25rem;
             height: 1.25rem;
@@ -235,7 +244,7 @@
             transition: background 0.3s;
         }
 
-        .toggle-checkbox:checked + .toggle-label {
+        .toggle-checkbox:checked+.toggle-label {
             background: var(--accent);
         }
 
@@ -322,6 +331,7 @@
         .widget-toggle-label {
             transition: all 0.3s ease;
         }
+
         .widget-toggle-label:hover {
             transform: scale(1.05);
             color: var(--accent);
@@ -337,7 +347,10 @@
 <!-- ==================== TOAST ==================== -->
 <div id="toast" class="toast">
     <div id="toastIcon" class="w-9 h-9 rounded-full flex items-center justify-center text-white"></div>
-    <div><h4 id="toastTitle" class="text-sm font-bold"></h4><p id="toastMsg" class="text-xs opacity-70 mt-0.5"></p></div>
+    <div>
+        <h4 id="toastTitle" class="text-sm font-bold"></h4>
+        <p id="toastMsg" class="text-xs opacity-70 mt-0.5"></p>
+    </div>
 </div>
 
 <!-- ==================== NAVIGATION ==================== -->
@@ -349,7 +362,7 @@
             </div>
             <div>
                 <span class="font-extrabold text-xl tracking-tight" style="color: var(--text);">Cibitung<span class="text-primary-600">Frozen</span></span>
-                <p class="text-[10px] uppercase font-bold tracking-widest opacity-50 -mt-1">ERP Ultimate</p>
+                <p class="text-[10px] uppercase font-bold tracking-widest opacity-50 -mt-1">ERP Ultimate v5.2</p>
             </div>
         </div>
         <div class="hidden lg:flex items-center gap-2 px-3 py-1.5 rounded-full bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800">
@@ -407,24 +420,21 @@
                     <i class="ph ph-gear text-lg"></i> Pengaturan
                 </button>
             </nav>
-            <!-- Tips & Info -->
+            <!-- Tips Cepat -->
             <div class="p-4 border-t mt-2" style="border-color: var(--border);">
                 <h4 class="text-xs font-bold uppercase tracking-wider opacity-50 mb-2">💡 Tips Cepat</h4>
-                <p class="text-xs opacity-60 leading-relaxed">Gunakan <strong>FEFO</strong> untuk produk frozen agar batch terdekat expired terjual lebih dulu.</p>
+                <p class="text-xs opacity-60 leading-relaxed">
+                    Gunakan <strong>FEFO</strong> untuk produk frozen agar batch terdekat expired terjual lebih dulu.
+                    Backup data setiap minggu untuk keamanan.
+                </p>
             </div>
+            <!-- Info Sistem Singkat -->
             <div class="p-4 border-t mt-2" style="border-color: var(--border);">
                 <h4 class="text-xs font-bold uppercase tracking-wider opacity-50 mb-2">ℹ️ Info Sistem</h4>
-                <p class="text-xs opacity-50">Versi 5.0 · Build 2025</p>
-                <p class="text-xs opacity-50">Database: IndexedDB</p>
+                <p class="text-xs opacity-50">Versi 5.2 · Build 2025</p>
+                <p class="text-xs opacity-50">Database: IndexedDB (lokal)</p>
                 <p class="text-xs opacity-50">Mode: <span id="sidebar-mode">Terang</span></p>
                 <p class="text-xs opacity-50">Shortcut: <kbd>Ctrl+B</kbd> Backup</p>
-            </div>
-            <!-- Placeholder Fitur Mendatang -->
-            <div class="p-4 border-t mt-2" style="border-color: var(--border);">
-                <h4 class="text-xs font-bold uppercase tracking-wider opacity-50 mb-2">🔜 Segera Hadir</h4>
-                <p class="text-xs opacity-40">• Mobile App (PWA)</p>
-                <p class="text-xs opacity-40">• Integrasi Marketplace API</p>
-                <p class="text-xs opacity-40">• Laporan Pajak Otomatis</p>
             </div>
         </div>
     </aside>
@@ -476,15 +486,9 @@
                 <label class="widget-toggle-label flex items-center gap-1 cursor-pointer">
                     <input type="checkbox" class="widget-toggle" data-widget="recentActivity" checked> 📜 Aktivitas
                 </label>
-                <label class="widget-toggle-label flex items-center gap-1 cursor-pointer">
-                    <input type="checkbox" class="widget-toggle" data-widget="topProducts" checked> 🏆 Top Produk
-                </label>
-                <label class="widget-toggle-label flex items-center gap-1 cursor-pointer">
-                    <input type="checkbox" class="widget-toggle" data-widget="weatherWidget" checked> 🌦️ Cuaca Bisnis
-                </label>
             </div>
 
-            <!-- Widgets -->
+            <!-- Widget 1: Stok Summary -->
             <div id="widget-stockSummary" class="card p-6">
                 <div class="flex items-center justify-between mb-4">
                     <h3 class="font-semibold flex items-center gap-2"><i class="ph ph-fish text-primary-600"></i> Stok Ikan Saat Ini</h3>
@@ -492,6 +496,8 @@
                 </div>
                 <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4" id="dashboardSummaryCards"></div>
             </div>
+
+            <!-- Widget 2: Batch Expired -->
             <div id="widget-expiringBatches" class="card p-6">
                 <div class="flex items-center justify-between mb-3">
                     <h3 class="font-semibold flex items-center gap-2 text-red-600"><i class="ph ph-warning"></i> ⚠ Batch Hampir Kadaluarsa (≤7 hari)</h3>
@@ -499,29 +505,28 @@
                 </div>
                 <div id="expiringBatches" class="space-y-2 text-sm"></div>
             </div>
+
+            <!-- Widget 3: Revenue Chart -->
             <div id="widget-revenueChart" class="card p-6">
                 <h3 class="font-semibold mb-4 flex items-center gap-2"><i class="ph ph-chart-line-up text-green-600"></i> Pendapatan 7 Hari Terakhir</h3>
                 <canvas id="chartRevenue" height="220"></canvas>
             </div>
+
+            <!-- Widget 4: Laba Rugi -->
             <div id="widget-profitLoss" class="card p-6">
                 <h3 class="font-semibold mb-4 flex items-center gap-2"><i class="ph ph-chart-pie text-violet-600"></i> Laba Rugi Bulan Ini</h3>
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-4" id="financeSummary"></div>
             </div>
+
+            <!-- Widget 5: Aktivitas Terbaru -->
             <div id="widget-recentActivity" class="card p-6">
                 <h3 class="font-semibold mb-4 flex items-center gap-2"><i class="ph ph-activity text-slate-600"></i> Aktivitas Terbaru</h3>
-                <div id="recentActivityList" class="text-sm space-y-2 max-h-48 overflow-auto"><p class="opacity-50">Belum ada aktivitas.</p></div>
-            </div>
-            <div id="widget-topProducts" class="card p-6">
-                <h3 class="font-semibold mb-4 flex items-center gap-2"><i class="ph ph-medal text-amber-600"></i> Top 5 Produk Terlaris</h3>
-                <div id="topProductsList" class="text-sm space-y-2"><p class="opacity-50">Data akan muncul setelah ada transaksi.</p></div>
-            </div>
-            <div id="widget-weatherWidget" class="card p-6">
-                <h3 class="font-semibold mb-4 flex items-center gap-2"><i class="ph ph-cloud-sun text-blue-500"></i> Cuaca Bisnis Hari Ini</h3>
-                <div class="text-sm opacity-70">
-                    <p>📈 <strong>Tren Penjualan:</strong> <span id="trendSales">Menunggu data...</span></p>
-                    <p>📦 <strong>Rekomendasi:</strong> <span id="trendRecommendation">Stok aman, tidak ada tindakan khusus.</span></p>
+                <div id="recentActivityList" class="text-sm space-y-2 max-h-48 overflow-auto">
+                    <p class="opacity-50">Belum ada aktivitas.</p>
                 </div>
             </div>
+
+            <!-- Widget 6: Quick Actions -->
             <div id="widget-quickActions" class="card p-6">
                 <h3 class="font-semibold mb-4 flex items-center gap-2"><i class="ph ph-lightning text-amber-600"></i> Aksi Cepat</h3>
                 <div class="flex flex-wrap gap-3">
@@ -532,6 +537,8 @@
                     <button onclick="switchTab('tab-reports')" class="btn btn-secondary"><i class="ph ph-file-text"></i> Lihat Laporan</button>
                 </div>
             </div>
+
+            <!-- Widget 7: Tips & Trik -->
             <div class="card p-6">
                 <h3 class="font-semibold mb-4 flex items-center gap-2"><i class="ph ph-lightbulb text-yellow-600"></i> Tips & Trik</h3>
                 <ul class="list-disc list-inside text-sm space-y-2 opacity-80">
@@ -539,6 +546,7 @@
                     <li>Backup data setiap minggu untuk keamanan.</li>
                     <li>Gunakan filter di Riwayat untuk mencari transaksi lama.</li>
                     <li>Laporan Proyeksi membantu perencanaan stok.</li>
+                    <li>Stok menipis? Cek tab <strong>Laporan</strong> untuk rekomendasi restock.</li>
                 </ul>
             </div>
         </div>
@@ -547,9 +555,11 @@
         <div id="tab-stock" class="tab-content space-y-6">
             <div class="card p-6">
                 <h2 class="text-xl font-bold mb-4 flex items-center gap-2"><i class="ph ph-package text-primary-600"></i> Manajemen Batch & Stok</h2>
+                <!-- Catatan -->
                 <div class="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg mb-4 text-sm">
                     <p>📌 <strong>Catatan:</strong> Pastikan mengisi <em>tanggal kadaluarsa</em> dengan benar agar sistem memprioritaskan batch dengan metode FEFO.</p>
                 </div>
+                <!-- Tabel Ringkasan Stok -->
                 <div class="overflow-x-auto mb-6">
                     <table class="w-full text-sm">
                         <thead class="bg-slate-50 dark:bg-slate-800">
@@ -564,11 +574,14 @@
                         <tbody id="stockTableBody"></tbody>
                     </table>
                 </div>
+                <!-- Batch Terpakai Hari Ini -->
                 <div class="card p-4 mb-6 bg-slate-50 dark:bg-slate-800">
                     <h3 class="font-semibold mb-2">📋 Batch Terpakai Hari Ini</h3>
                     <div id="usedBatchesToday" class="text-sm opacity-70">Belum ada batch terpakai hari ini.</div>
                 </div>
+                <!-- Divider -->
                 <div style="border-top:1px solid var(--border); margin: 1.5rem 0;"></div>
+                <!-- Form Tambah Batch -->
                 <h3 class="font-semibold mb-3 flex items-center gap-2">
                     <i class="ph ph-plus-circle text-green-600"></i> Tambah Batch Baru (Landed Cost Lengkap)
                 </h3>
@@ -602,6 +615,7 @@
                     <button type="submit" class="btn btn-primary col-span-full sm:col-span-1">💾 Simpan Batch</button>
                 </form>
                 <button onclick="document.getElementById('batchDetailModal').classList.remove('hidden')" class="text-blue-600 text-sm underline mt-3">📦 Lihat Semua Batch (Detail)</button>
+                <!-- Panduan FEFO -->
                 <div class="mt-6 p-4 bg-slate-50 dark:bg-slate-800 rounded-lg text-sm">
                     <h4 class="font-semibold mb-2">📖 Panduan Alokasi Stok (FEFO)</h4>
                     <p class="opacity-70">Sistem secara otomatis akan memilih batch dengan tanggal kadaluarsa terdekat saat mencatat penjualan. Anda dapat mengubah metode alokasi di <strong>Pengaturan</strong>.</p>
@@ -641,10 +655,12 @@
                     </div>
                 </form>
                 <div id="salesResult" class="mt-4 p-4 bg-slate-50 dark:bg-slate-800 rounded-xl hidden"></div>
+                <!-- Penjualan Hari Ini -->
                 <div class="mt-6">
                     <h3 class="font-semibold mb-2">📋 Penjualan Hari Ini</h3>
                     <div id="todaySalesList" class="text-sm space-y-2 max-h-48 overflow-auto"><p class="opacity-50">Belum ada penjualan hari ini.</p></div>
                 </div>
+                <!-- Tips Margin -->
                 <div class="mt-4 p-4 bg-emerald-50 dark:bg-emerald-900/20 rounded-lg text-sm">
                     <h4 class="font-semibold mb-2">💡 Tips Margin</h4>
                     <p class="opacity-80">Margin default dapat diubah di <strong>Pengaturan</strong>. Untuk partai besar, Anda bisa memasukkan harga manual sesuai negosiasi.</p>
@@ -661,17 +677,37 @@
                     <div class="card p-4 text-center"><p class="text-xs opacity-60">Total Pendapatan</p><p class="text-2xl font-bold" id="crmTotalRevenue">Rp 0</p></div>
                     <div class="card p-4 text-center"><p class="text-xs opacity-60">Pelanggan Aktif (30 hari)</p><p class="text-2xl font-bold" id="crmActiveCustomers">0</p></div>
                 </div>
+                <!-- Segmentasi Pelanggan -->
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6 text-sm">
                     <div class="card p-3 text-center"><span class="opacity-60">Top</span><p class="font-bold text-lg" id="segTop">0</p></div>
                     <div class="card p-3 text-center"><span class="opacity-60">Regular</span><p class="font-bold text-lg" id="segRegular">0</p></div>
                     <div class="card p-3 text-center"><span class="opacity-60">New</span><p class="font-bold text-lg" id="segNew">0</p></div>
                     <div class="card p-3 text-center"><span class="opacity-60">Churn Risk</span><p class="font-bold text-lg text-red-600" id="segChurn">0</p></div>
                 </div>
+                <!-- Header dengan Tombol Ekspor -->
+                <div class="flex justify-between items-center mb-3">
+                    <h3 class="font-semibold">Daftar Pelanggan</h3>
+                    <button id="exportCustomersCSV" class="btn btn-sm btn-secondary"><i class="ph ph-file-csv"></i> Ekspor CSV</button>
+                </div>
+                <!-- Tabel Pelanggan -->
                 <div class="overflow-x-auto">
                     <table class="w-full text-sm">
-                        <thead><tr><th class="p-2 text-left">Nama</th><th class="p-2 text-right">Total Pembelian</th><th class="p-2 text-right">Transaksi</th><th class="p-2 text-right">Terakhir Beli</th><th class="p-2 text-center">Status</th></tr></thead>
-                        <tbody id="crmTableBody"><tr><td colspan="5" class="text-center p-4 opacity-50">Belum ada data pelanggan</td></tr></tbody>
+                        <thead><tr><th class="p-2 text-left">Nama</th><th class="p-2 text-right">Total Pembelian</th><th class="p-2 text-right">Transaksi</th><th class="p-2 text-right">Terakhir Beli</th><th class="p-2 text-center">Status</th><th class="p-2 text-center">Aksi</th></tr></thead>
+                        <tbody id="crmTableBody"><tr><td colspan="6" class="text-center p-4 opacity-50">Belum ada data pelanggan</td></tr></tbody>
                     </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal Konfirmasi Hapus Pelanggan -->
+        <div id="deleteCustomerModal" class="modal-backdrop hidden">
+            <div class="card w-full max-w-md p-6 text-center">
+                <i class="ph ph-warning-circle text-5xl text-red-500 mx-auto mb-3"></i>
+                <h3 class="text-lg font-bold mb-2">Hapus Pelanggan?</h3>
+                <p class="text-sm opacity-70 mb-4">Data pelanggan <strong id="deleteCustomerName"></strong> akan dihapus permanen. Riwayat transaksi tetap tersimpan.</p>
+                <div class="flex gap-3 justify-center">
+                    <button onclick="document.getElementById('deleteCustomerModal').classList.add('hidden')" class="btn btn-secondary">Batal</button>
+                    <button id="confirmDeleteCustomer" class="btn btn-danger">Ya, Hapus</button>
                 </div>
             </div>
         </div>
@@ -712,14 +748,17 @@
                         </table>
                     </div>
                 </div>
+                <!-- Grafik Tahunan -->
                 <div class="mt-6 card p-4">
                     <h3 class="font-semibold mb-2">📈 Grafik Laba Rugi Tahunan</h3>
                     <canvas id="chartYearlyPL" height="150"></canvas>
                 </div>
+                <!-- Arus Kas -->
                 <div class="mt-4 card p-4">
                     <h3 class="font-semibold mb-2">💵 Arus Kas (Sederhana)</h3>
                     <div id="cashflowSummary" class="text-sm opacity-70">Data akan terisi setelah beberapa transaksi dan beban tercatat.</div>
                 </div>
+                <!-- Catatan Pajak -->
                 <div class="mt-4 p-4 bg-amber-50 dark:bg-amber-900/20 rounded-lg text-sm">
                     <h4 class="font-semibold mb-2">📌 Catatan Pajak</h4>
                     <p class="opacity-80">PPN dihitung otomatis dari DPP. PPh 25 dan PPh 21 dihitung dari laba bersih. Pastikan pengaturan pajak sudah benar di tab <strong>Pengaturan</strong>.</p>
@@ -743,12 +782,14 @@
                         <tbody id="historyTableBody"><tr><td colspan="6" class="text-center p-4 opacity-50">Belum ada transaksi</td></tr></tbody>
                     </table>
                 </div>
+                <!-- Statistik Riwayat -->
                 <div class="mt-6 grid grid-cols-2 md:grid-cols-4 gap-4 text-sm" id="historyStats">
                     <div class="card p-3 text-center"><span class="opacity-60">Total Transaksi</span><p class="font-bold" id="historyTotalTrx">0</p></div>
                     <div class="card p-3 text-center"><span class="opacity-60">Total Pendapatan</span><p class="font-bold" id="historyTotalRevenue">Rp 0</p></div>
                     <div class="card p-3 text-center"><span class="opacity-60">Rata-rata/hari</span><p class="font-bold" id="historyAvgDaily">Rp 0</p></div>
                     <div class="card p-3 text-center"><span class="opacity-60">Transaksi Hari Ini</span><p class="font-bold" id="historyTodayTrx">0</p></div>
                 </div>
+                <!-- Grafik Riwayat Pendapatan -->
                 <div class="mt-4 card p-4">
                     <h3 class="font-semibold mb-2">📈 Grafik Riwayat Pendapatan (30 Hari)</h3>
                     <canvas id="chartHistoryRevenue" height="150"></canvas>
@@ -781,6 +822,7 @@
                     <div class="card p-4"><h3 class="font-semibold mb-2">💰 Margin per Produk</h3><div id="reportMargin" class="text-sm space-y-1"></div></div>
                     <div class="card p-4"><h3 class="font-semibold mb-2">📈 Proyeksi Keuangan</h3><div id="reportProyeksi" class="text-sm space-y-1"></div></div>
                 </div>
+                <!-- Penjelasan Laporan -->
                 <div class="mt-6 p-4 bg-slate-50 dark:bg-slate-800 rounded-xl text-sm">
                     <h4 class="font-semibold mb-2">📋 Keterangan Laporan</h4>
                     <ul class="list-disc list-inside space-y-1 opacity-70">
@@ -857,7 +899,7 @@
                 <!-- Backup & Keamanan -->
                 <div class="mt-6 card p-4">
                     <h3 class="font-semibold mb-3">☁️ Backup & Keamanan</h3>
-                    <p class="text-sm opacity-70">Data Anda disimpan di browser. Lakukan backup manual secara berkala. Tombol backup ada di pojok kanan atas, atau gunakan <kbd>Ctrl+B</kbd>.</p>
+                    <p class="text-sm opacity-70">Data Anda disimpan di browser. Lakukan backup manual secara berkala menggunakan tombol di pojok kanan atas, atau gunakan <kbd>Ctrl+B</kbd>.</p>
                     <button onclick="CFS.App.backupData()" class="btn btn-primary mt-2"><i class="ph ph-download-simple"></i> Backup Sekarang</button>
                 </div>
             </div>
@@ -867,11 +909,9 @@
 </div>
 
 <!-- ==================== FOOTER ==================== -->
-<footer class="border-t mt-auto py-6" style="background: var(--surface); border-color: var(--border);">
+<footer class="border-t mt-auto py-4" style="background: var(--surface); border-color: var(--border);">
     <div class="container-main text-center text-xs opacity-50">
-        <p>&copy; 2025 <strong>Cibitung Frozen</strong> — ERP Ultimate v5.0. Dibuat untuk operasional bisnis seafood beku.</p>
-        <p class="mt-1">Data tersimpan lokal di browser Anda. Lakukan backup secara berkala. Shortcut: <kbd>Ctrl+B</kbd> Backup, <kbd>Ctrl+D</kbd> Dashboard.</p>
-        <p class="mt-2 opacity-40">Butuh bantuan? Baca dokumentasi atau hubungi support.</p>
+        <p>&copy; 2025 <strong>Cibitung Frozen</strong> — ERP Ultimate v5.2</p>
     </div>
 </footer>
 
