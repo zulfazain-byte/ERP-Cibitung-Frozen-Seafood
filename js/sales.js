@@ -9,7 +9,6 @@ CFS.Sales = {
             throw new Error('Gagal mengalokasikan stok.');
         }
         let totalHPP = usedBatches.reduce((sum, b) => sum + (b.qty * b.harga_per_kg), 0);
-        // Tambahkan biaya penyimpanan
         const batches = await CFS.Inventory.getBatches();
         for (let ub of usedBatches) {
             const batch = batches.find(b => b.id === ub.id);
@@ -51,7 +50,6 @@ CFS.Sales = {
         const summary = await CFS.Inventory.getStockSummary();
         const available = summary[productName] || 0;
         if (qty > available) return { error: `Stok tidak cukup! Tersedia ${available.toFixed(1)} kg.` };
-        // Kalkulasi HPP rata-rata dari batch yang akan terpakai (simulasi)
         const batches = await CFS.Inventory.getBatches();
         const now = new Date();
         const candidates = batches
@@ -79,19 +77,11 @@ CFS.Sales = {
         if (manualHarga && tier !== 'partai') hargaJual = manualHarga;
         const dppTotal = hargaJual * qty;
         const ppn = dppTotal * (settings.ppn / 100);
-        return {
-            hargaJual,
-            dppTotal,
-            ppn,
-            totalInvoice: dppTotal + ppn,
-            hppAvg,
-            available
-        };
+        return { hargaJual, dppTotal, ppn, totalInvoice: dppTotal + ppn, hppAvg, available };
     },
 
     async processSale(klien, productName, qty, tier, manualHarga = null) {
         const pricing = await this.calculatePricing(productName, qty, tier, manualHarga);
-        // Catat jurnal
         if (CFS.Accounting && CFS.Accounting.recordSale) {
             await CFS.Accounting.recordSale(klien, productName, qty, pricing.dppTotal, pricing.ppn, pricing.totalHPP);
         }
@@ -107,19 +97,11 @@ CFS.Sales = {
             usedBatches: pricing.usedBatches,
             tanggal: new Date().toISOString()
         };
-        // Simpan transaksi
         const transactions = await CFS.Storage.get(CFS.Storage.TRANSACTIONS_KEY) || [];
         transactions.unshift(trx);
         await CFS.Storage.set(CFS.Storage.TRANSACTIONS_KEY, transactions);
-        // Update CRM
         await this.upsertCustomer(klien, trx);
         return pricing;
-    },
-
-    async recordTransaction(trx) {
-        const transactions = await CFS.Storage.get(CFS.Storage.TRANSACTIONS_KEY) || [];
-        transactions.unshift(trx);
-        await CFS.Storage.set(CFS.Storage.TRANSACTIONS_KEY, transactions);
     },
 
     async getTransactions() {
@@ -135,7 +117,7 @@ CFS.Sales = {
         return trx;
     },
 
-    // ========== CRM Functions ==========
+    // ========== CRM ==========
     async getCustomers() {
         return await CFS.Storage.get(this.CUSTOMERS_KEY) || [];
     },
@@ -161,9 +143,7 @@ CFS.Sales = {
         customer.totalPembelian += transaksi.totalInvoice || 0;
         customer.totalTransaksi += 1;
         customer.terakhirBeli = new Date().toISOString();
-        if (!customer.produkFavorit[transaksi.produk]) {
-            customer.produkFavorit[transaksi.produk] = 0;
-        }
+        if (!customer.produkFavorit[transaksi.produk]) customer.produkFavorit[transaksi.produk] = 0;
         customer.produkFavorit[transaksi.produk] += transaksi.qty || 0;
         await this.saveCustomers(customers);
         return customer;
@@ -202,5 +182,64 @@ CFS.Sales = {
                     <td class="p-2 text-center"><span class="${color} text-xs font-semibold">${status}</span></td>
                 </tr>`;
             }).join('');
+    },
+
+    // ========== CETAK PDF INVOICE ==========
+    printInvoice(klien, produk, qty, hargaJual, dppTotal, ppn, totalInvoice) {
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+        const settings = CFS.Settings.get().then(s => {
+            const namaUsaha = s.namaUsaha || 'Cibitung Frozen';
+            const alamat = s.alamat || 'Jl. Industri No.1';
+            const telepon = s.telepon || '08123456789';
+            const invNo = 'INV-CFS-' + Date.now().toString().slice(-6);
+            const tgl = new Date().toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' });
+
+            // Header
+            doc.setFillColor(37, 99, 235);
+            doc.rect(0, 0, 210, 35, 'F');
+            doc.setFontSize(22);
+            doc.setTextColor(255, 255, 255);
+            doc.text('INVOICE', 14, 20);
+            doc.setFontSize(9);
+            doc.text(namaUsaha, 150, 14);
+            doc.text(alamat, 150, 18);
+            doc.text(telepon, 150, 22);
+
+            doc.setTextColor(0);
+            doc.setFontSize(10);
+            doc.text('Kepada:', 14, 45);
+            doc.text(klien, 14, 50);
+            doc.text(`No. Invoice: ${invNo}`, 150, 45);
+            doc.text(`Tanggal: ${tgl}`, 150, 50);
+
+            // Tabel
+            doc.setDrawColor(220);
+            doc.setFillColor(245, 245, 245);
+            doc.rect(14, 60, 182, 10, 'F');
+            doc.text('Deskripsi', 16, 67);
+            doc.text('Qty (kg)', 120, 67);
+            doc.text('Harga/kg', 150, 67);
+            doc.text('Subtotal', 175, 67);
+            doc.rect(14, 70, 182, 12);
+            doc.text(produk, 16, 78);
+            doc.text(qty.toString(), 120, 78);
+            doc.text(CFS.Utils.formatRupiah(hargaJual), 145, 78);
+            doc.text(CFS.Utils.formatRupiah(dppTotal), 170, 78);
+
+            doc.line(140, 90, 196, 90);
+            doc.text('DPP:', 140, 98);
+            doc.text(CFS.Utils.formatRupiah(dppTotal), 175, 98);
+            doc.setTextColor(220, 38, 38);
+            doc.text(`PPN (${s.ppn || 12}%):`, 140, 106);
+            doc.text(CFS.Utils.formatRupiah(ppn), 175, 106);
+            doc.setFillColor(37, 99, 235);
+            doc.rect(138, 112, 58, 10, 'F');
+            doc.setTextColor(255, 255, 255);
+            doc.text('TOTAL', 140, 119);
+            doc.text(CFS.Utils.formatRupiah(totalInvoice), 175, 119);
+
+            doc.save(`Invoice_${klien}_${invNo}.pdf`);
+        });
     }
 };
