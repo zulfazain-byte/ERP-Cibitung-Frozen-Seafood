@@ -195,6 +195,15 @@
             background-color: #15803d;
         }
 
+        .btn-danger {
+            background-color: var(--danger);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background-color: #b91c1c;
+        }
+
         .toggle-checkbox {
             width: 1.25rem;
             height: 1.25rem;
@@ -410,7 +419,7 @@
                 <p class="text-xs opacity-50">Mode: <span id="sidebar-mode">Terang</span></p>
                 <p class="text-xs opacity-50">Shortcut: <kbd>Ctrl+B</kbd> Backup</p>
             </div>
-            <!-- Coming Soon Placeholder -->
+            <!-- Placeholder Fitur Mendatang -->
             <div class="p-4 border-t mt-2" style="border-color: var(--border);">
                 <h4 class="text-xs font-bold uppercase tracking-wider opacity-50 mb-2">🔜 Segera Hadir</h4>
                 <p class="text-xs opacity-40">• Mobile App (PWA)</p>
@@ -446,7 +455,7 @@
                 <div><span class="opacity-60">Batch Kritis</span><p class="font-bold text-lg text-red-600" id="statusCriticalBatches">0</p></div>
             </div>
 
-            <!-- Widget Toggles dengan animasi -->
+            <!-- Widget Toggles -->
             <div class="card p-4 flex flex-wrap items-center gap-3 text-sm animate-fade-in">
                 <span class="font-medium opacity-60">Widget aktif:</span>
                 <label class="widget-toggle-label flex items-center gap-1 cursor-pointer">
@@ -475,7 +484,7 @@
                 </label>
             </div>
 
-            <!-- Widget 1: Stok Summary -->
+            <!-- Widgets -->
             <div id="widget-stockSummary" class="card p-6">
                 <div class="flex items-center justify-between mb-4">
                     <h3 class="font-semibold flex items-center gap-2"><i class="ph ph-fish text-primary-600"></i> Stok Ikan Saat Ini</h3>
@@ -483,8 +492,6 @@
                 </div>
                 <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4" id="dashboardSummaryCards"></div>
             </div>
-
-            <!-- Widget 2: Batch Expired -->
             <div id="widget-expiringBatches" class="card p-6">
                 <div class="flex items-center justify-between mb-3">
                     <h3 class="font-semibold flex items-center gap-2 text-red-600"><i class="ph ph-warning"></i> ⚠ Batch Hampir Kadaluarsa (≤7 hari)</h3>
@@ -492,36 +499,22 @@
                 </div>
                 <div id="expiringBatches" class="space-y-2 text-sm"></div>
             </div>
-
-            <!-- Widget 3: Revenue Chart -->
             <div id="widget-revenueChart" class="card p-6">
                 <h3 class="font-semibold mb-4 flex items-center gap-2"><i class="ph ph-chart-line-up text-green-600"></i> Pendapatan 7 Hari Terakhir</h3>
                 <canvas id="chartRevenue" height="220"></canvas>
             </div>
-
-            <!-- Widget 4: Laba Rugi -->
             <div id="widget-profitLoss" class="card p-6">
                 <h3 class="font-semibold mb-4 flex items-center gap-2"><i class="ph ph-chart-pie text-violet-600"></i> Laba Rugi Bulan Ini</h3>
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-4" id="financeSummary"></div>
             </div>
-
-            <!-- Widget 5: Aktivitas Terbaru -->
             <div id="widget-recentActivity" class="card p-6">
                 <h3 class="font-semibold mb-4 flex items-center gap-2"><i class="ph ph-activity text-slate-600"></i> Aktivitas Terbaru</h3>
-                <div id="recentActivityList" class="text-sm space-y-2 max-h-48 overflow-auto">
-                    <p class="opacity-50">Belum ada aktivitas.</p>
-                </div>
+                <div id="recentActivityList" class="text-sm space-y-2 max-h-48 overflow-auto"><p class="opacity-50">Belum ada aktivitas.</p></div>
             </div>
-
-            <!-- Widget 6: Top Produk -->
             <div id="widget-topProducts" class="card p-6">
                 <h3 class="font-semibold mb-4 flex items-center gap-2"><i class="ph ph-medal text-amber-600"></i> Top 5 Produk Terlaris</h3>
-                <div id="topProductsList" class="text-sm space-y-2">
-                    <p class="opacity-50">Data akan muncul setelah ada transaksi.</p>
-                </div>
+                <div id="topProductsList" class="text-sm space-y-2"><p class="opacity-50">Data akan muncul setelah ada transaksi.</p></div>
             </div>
-
-            <!-- Widget 7: Cuaca Bisnis (Placeholder) -->
             <div id="widget-weatherWidget" class="card p-6">
                 <h3 class="font-semibold mb-4 flex items-center gap-2"><i class="ph ph-cloud-sun text-blue-500"></i> Cuaca Bisnis Hari Ini</h3>
                 <div class="text-sm opacity-70">
@@ -529,8 +522,6 @@
                     <p>📦 <strong>Rekomendasi:</strong> <span id="trendRecommendation">Stok aman, tidak ada tindakan khusus.</span></p>
                 </div>
             </div>
-
-            <!-- Widget 8: Quick Actions -->
             <div id="widget-quickActions" class="card p-6">
                 <h3 class="font-semibold mb-4 flex items-center gap-2"><i class="ph ph-lightning text-amber-600"></i> Aksi Cepat</h3>
                 <div class="flex flex-wrap gap-3">
@@ -541,8 +532,6 @@
                     <button onclick="switchTab('tab-reports')" class="btn btn-secondary"><i class="ph ph-file-text"></i> Lihat Laporan</button>
                 </div>
             </div>
-
-            <!-- Widget 9: Tips & Trik -->
             <div class="card p-6">
                 <h3 class="font-semibold mb-4 flex items-center gap-2"><i class="ph ph-lightbulb text-yellow-600"></i> Tips & Trik</h3>
                 <ul class="list-disc list-inside text-sm space-y-2 opacity-80">
@@ -550,7 +539,6 @@
                     <li>Backup data setiap minggu untuk keamanan.</li>
                     <li>Gunakan filter di Riwayat untuk mencari transaksi lama.</li>
                     <li>Laporan Proyeksi membantu perencanaan stok.</li>
-                    <li>Stok menipis? Cek tab <strong>Laporan</strong> untuk rekomendasi restock.</li>
                 </ul>
             </div>
         </div>
@@ -559,11 +547,9 @@
         <div id="tab-stock" class="tab-content space-y-6">
             <div class="card p-6">
                 <h2 class="text-xl font-bold mb-4 flex items-center gap-2"><i class="ph ph-package text-primary-600"></i> Manajemen Batch & Stok</h2>
-                <!-- Catatan -->
                 <div class="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg mb-4 text-sm">
                     <p>📌 <strong>Catatan:</strong> Pastikan mengisi <em>tanggal kadaluarsa</em> dengan benar agar sistem memprioritaskan batch dengan metode FEFO.</p>
                 </div>
-                <!-- Tabel Ringkasan Stok -->
                 <div class="overflow-x-auto mb-6">
                     <table class="w-full text-sm">
                         <thead class="bg-slate-50 dark:bg-slate-800">
@@ -578,14 +564,11 @@
                         <tbody id="stockTableBody"></tbody>
                     </table>
                 </div>
-                <!-- Batch Terpakai Hari Ini -->
                 <div class="card p-4 mb-6 bg-slate-50 dark:bg-slate-800">
                     <h3 class="font-semibold mb-2">📋 Batch Terpakai Hari Ini</h3>
                     <div id="usedBatchesToday" class="text-sm opacity-70">Belum ada batch terpakai hari ini.</div>
                 </div>
-                <!-- Divider -->
                 <div style="border-top:1px solid var(--border); margin: 1.5rem 0;"></div>
-                <!-- Form Tambah Batch -->
                 <h3 class="font-semibold mb-3 flex items-center gap-2">
                     <i class="ph ph-plus-circle text-green-600"></i> Tambah Batch Baru (Landed Cost Lengkap)
                 </h3>
@@ -619,7 +602,6 @@
                     <button type="submit" class="btn btn-primary col-span-full sm:col-span-1">💾 Simpan Batch</button>
                 </form>
                 <button onclick="document.getElementById('batchDetailModal').classList.remove('hidden')" class="text-blue-600 text-sm underline mt-3">📦 Lihat Semua Batch (Detail)</button>
-                <!-- Panduan FEFO -->
                 <div class="mt-6 p-4 bg-slate-50 dark:bg-slate-800 rounded-lg text-sm">
                     <h4 class="font-semibold mb-2">📖 Panduan Alokasi Stok (FEFO)</h4>
                     <p class="opacity-70">Sistem secara otomatis akan memilih batch dengan tanggal kadaluarsa terdekat saat mencatat penjualan. Anda dapat mengubah metode alokasi di <strong>Pengaturan</strong>.</p>
@@ -659,12 +641,10 @@
                     </div>
                 </form>
                 <div id="salesResult" class="mt-4 p-4 bg-slate-50 dark:bg-slate-800 rounded-xl hidden"></div>
-                <!-- Penjualan Hari Ini -->
                 <div class="mt-6">
                     <h3 class="font-semibold mb-2">📋 Penjualan Hari Ini</h3>
                     <div id="todaySalesList" class="text-sm space-y-2 max-h-48 overflow-auto"><p class="opacity-50">Belum ada penjualan hari ini.</p></div>
                 </div>
-                <!-- Tips Margin -->
                 <div class="mt-4 p-4 bg-emerald-50 dark:bg-emerald-900/20 rounded-lg text-sm">
                     <h4 class="font-semibold mb-2">💡 Tips Margin</h4>
                     <p class="opacity-80">Margin default dapat diubah di <strong>Pengaturan</strong>. Untuk partai besar, Anda bisa memasukkan harga manual sesuai negosiasi.</p>
@@ -681,14 +661,12 @@
                     <div class="card p-4 text-center"><p class="text-xs opacity-60">Total Pendapatan</p><p class="text-2xl font-bold" id="crmTotalRevenue">Rp 0</p></div>
                     <div class="card p-4 text-center"><p class="text-xs opacity-60">Pelanggan Aktif (30 hari)</p><p class="text-2xl font-bold" id="crmActiveCustomers">0</p></div>
                 </div>
-                <!-- Segmentasi Pelanggan -->
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6 text-sm">
                     <div class="card p-3 text-center"><span class="opacity-60">Top</span><p class="font-bold text-lg" id="segTop">0</p></div>
                     <div class="card p-3 text-center"><span class="opacity-60">Regular</span><p class="font-bold text-lg" id="segRegular">0</p></div>
                     <div class="card p-3 text-center"><span class="opacity-60">New</span><p class="font-bold text-lg" id="segNew">0</p></div>
                     <div class="card p-3 text-center"><span class="opacity-60">Churn Risk</span><p class="font-bold text-lg text-red-600" id="segChurn">0</p></div>
                 </div>
-                <!-- Tabel Pelanggan -->
                 <div class="overflow-x-auto">
                     <table class="w-full text-sm">
                         <thead><tr><th class="p-2 text-left">Nama</th><th class="p-2 text-right">Total Pembelian</th><th class="p-2 text-right">Transaksi</th><th class="p-2 text-right">Terakhir Beli</th><th class="p-2 text-center">Status</th></tr></thead>
@@ -734,17 +712,14 @@
                         </table>
                     </div>
                 </div>
-                <!-- Grafik Tahunan -->
                 <div class="mt-6 card p-4">
                     <h3 class="font-semibold mb-2">📈 Grafik Laba Rugi Tahunan</h3>
                     <canvas id="chartYearlyPL" height="150"></canvas>
                 </div>
-                <!-- Arus Kas -->
                 <div class="mt-4 card p-4">
                     <h3 class="font-semibold mb-2">💵 Arus Kas (Sederhana)</h3>
                     <div id="cashflowSummary" class="text-sm opacity-70">Data akan terisi setelah beberapa transaksi dan beban tercatat.</div>
                 </div>
-                <!-- Catatan Pajak -->
                 <div class="mt-4 p-4 bg-amber-50 dark:bg-amber-900/20 rounded-lg text-sm">
                     <h4 class="font-semibold mb-2">📌 Catatan Pajak</h4>
                     <p class="opacity-80">PPN dihitung otomatis dari DPP. PPh 25 dan PPh 21 dihitung dari laba bersih. Pastikan pengaturan pajak sudah benar di tab <strong>Pengaturan</strong>.</p>
@@ -768,14 +743,12 @@
                         <tbody id="historyTableBody"><tr><td colspan="6" class="text-center p-4 opacity-50">Belum ada transaksi</td></tr></tbody>
                     </table>
                 </div>
-                <!-- Statistik Riwayat -->
                 <div class="mt-6 grid grid-cols-2 md:grid-cols-4 gap-4 text-sm" id="historyStats">
                     <div class="card p-3 text-center"><span class="opacity-60">Total Transaksi</span><p class="font-bold" id="historyTotalTrx">0</p></div>
                     <div class="card p-3 text-center"><span class="opacity-60">Total Pendapatan</span><p class="font-bold" id="historyTotalRevenue">Rp 0</p></div>
                     <div class="card p-3 text-center"><span class="opacity-60">Rata-rata/hari</span><p class="font-bold" id="historyAvgDaily">Rp 0</p></div>
                     <div class="card p-3 text-center"><span class="opacity-60">Transaksi Hari Ini</span><p class="font-bold" id="historyTodayTrx">0</p></div>
                 </div>
-                <!-- Grafik Riwayat Pendapatan -->
                 <div class="mt-4 card p-4">
                     <h3 class="font-semibold mb-2">📈 Grafik Riwayat Pendapatan (30 Hari)</h3>
                     <canvas id="chartHistoryRevenue" height="150"></canvas>
@@ -808,7 +781,6 @@
                     <div class="card p-4"><h3 class="font-semibold mb-2">💰 Margin per Produk</h3><div id="reportMargin" class="text-sm space-y-1"></div></div>
                     <div class="card p-4"><h3 class="font-semibold mb-2">📈 Proyeksi Keuangan</h3><div id="reportProyeksi" class="text-sm space-y-1"></div></div>
                 </div>
-                <!-- Penjelasan Laporan -->
                 <div class="mt-6 p-4 bg-slate-50 dark:bg-slate-800 rounded-xl text-sm">
                     <h4 class="font-semibold mb-2">📋 Keterangan Laporan</h4>
                     <ul class="list-disc list-inside space-y-1 opacity-70">
@@ -869,10 +841,23 @@
                     </form>
                 </div>
 
-                <!-- Catatan Backup -->
+                <!-- RESET ULANG DATA -->
+                <div class="mt-8 card p-4 border-red-200 dark:border-red-800 bg-red-50/30 dark:bg-red-900/10">
+                    <h3 class="font-semibold mb-3 text-red-700 dark:text-red-400 flex items-center gap-2">
+                        <i class="ph ph-warning-circle text-xl"></i> Reset Ulang Semua Data
+                    </h3>
+                    <p class="text-sm text-red-700/80 dark:text-red-400/80 mb-4">
+                        Tindakan ini akan menghapus seluruh data termasuk batch, transaksi, jurnal, pelanggan, dan pengaturan. Data yang sudah dihapus <strong>tidak dapat dikembalikan</strong>. Pastikan Anda sudah melakukan backup terlebih dahulu.
+                    </p>
+                    <button id="resetAllDataBtn" class="btn btn-danger w-full sm:w-auto">
+                        <i class="ph ph-trash"></i> Reset Semua Data
+                    </button>
+                </div>
+
+                <!-- Backup & Keamanan -->
                 <div class="mt-6 card p-4">
                     <h3 class="font-semibold mb-3">☁️ Backup & Keamanan</h3>
-                    <p class="text-sm opacity-70">Data Anda disimpan di browser. Lakukan backup manual secara berkala. Tombol backup ada di pojok kanan atas. Anda juga dapat menggunakan <kbd>Ctrl+B</kbd>.</p>
+                    <p class="text-sm opacity-70">Data Anda disimpan di browser. Lakukan backup manual secara berkala. Tombol backup ada di pojok kanan atas, atau gunakan <kbd>Ctrl+B</kbd>.</p>
                     <button onclick="CFS.App.backupData()" class="btn btn-primary mt-2"><i class="ph ph-download-simple"></i> Backup Sekarang</button>
                 </div>
             </div>
