@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cibitung Frozen — ERP Ultimate v5.2</title>
+    <title>Cibitung Frozen — ERP Ultimate v5.3</title>
     <meta name="description" content="Sistem ERP manajemen inventori, penjualan, dan akuntansi Cibitung Frozen.">
     <meta name="theme-color" content="#2563eb">
     <meta name="application-name" content="CibitungFrozen ERP">
@@ -96,255 +96,58 @@
             -webkit-font-smoothing: antialiased;
         }
 
-        .container-main {
-            width: 100%;
-            max-width: 1280px;
-            margin: 0 auto;
-            padding: 0 1rem;
-        }
-
-        .tab-content {
-            display: none;
-            opacity: 0;
-            transform: translateY(8px);
-            transition: opacity 0.3s, transform 0.3s;
-        }
-
-        .tab-content.active {
-            display: block;
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .card {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: var(--radius-lg);
-            box-shadow: var(--card-shadow);
-            transition: var(--transition-base);
-        }
-
-        .card:hover {
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-        }
-
-        input,
-        select,
-        textarea {
-            background: var(--surface);
-            color: var(--text);
-            border: 1px solid var(--border);
-            border-radius: var(--radius-sm);
-            padding: 0.625rem 0.75rem;
-            transition: var(--transition-base);
-            outline: none;
-            font-family: inherit;
-            font-size: 0.875rem;
-            width: 100%;
-        }
-
-        input:focus,
-        select:focus,
-        textarea:focus {
-            border-color: var(--accent);
-            box-shadow: 0 0 0 3px rgba(37,99,235,0.1);
-        }
-
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-            padding: 0.625rem 1.25rem;
-            font-weight: 600;
-            border-radius: var(--radius-md);
-            transition: var(--transition-base);
-            cursor: pointer;
-            border: none;
-            font-size: 0.875rem;
-            white-space: nowrap;
-            user-select: none;
-        }
-
+        .container-main { width: 100%; max-width: 1280px; margin: 0 auto; padding: 0 1rem; }
+        .tab-content { display: none; opacity: 0; transform: translateY(8px); transition: opacity 0.3s, transform 0.3s; }
+        .tab-content.active { display: block; opacity: 1; transform: translateY(0); }
+        .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); box-shadow: var(--card-shadow); transition: var(--transition-base); }
+        .card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+        input, select, textarea { background: var(--surface); color: var(--text); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 0.625rem 0.75rem; transition: var(--transition-base); outline: none; font-family: inherit; font-size: 0.875rem; width: 100%; }
+        input:focus, select:focus, textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(37,99,235,0.1); }
+        .btn { display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; padding: 0.625rem 1.25rem; font-weight: 600; border-radius: var(--radius-md); transition: var(--transition-base); cursor: pointer; border: none; font-size: 0.875rem; white-space: nowrap; user-select: none; }
         .btn:active { transform: scale(0.97); }
+        .btn-primary { background-color: var(--accent); color: white; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
+        .btn-primary:hover { background-color: #1d4ed8; box-shadow: 0 4px 12px rgba(37,99,235,0.3); }
+        .btn-secondary { background-color: transparent; border: 1px solid var(--border); color: var(--text); }
+        .btn-secondary:hover { background-color: var(--bg); border-color: var(--accent); }
+        .btn-success { background-color: var(--success); color: white; }
+        .btn-success:hover { background-color: #15803d; }
+        .btn-danger { background-color: var(--danger); color: white; }
+        .btn-danger:hover { background-color: #b91c1c; }
+        .btn-sm { padding: 0.375rem 0.75rem; font-size: 0.75rem; }
+        .toggle-checkbox { width: 1.25rem; height: 1.25rem; border-radius: 9999px; border: 2px solid #cbd5e1; background: white; cursor: pointer; position: absolute; top: 0.175rem; left: 0.175rem; z-index: 10; transition: all 0.3s; appearance: none; }
+        .toggle-checkbox:checked { left: 1.35rem; border-color: var(--accent); background: white; }
+        .toggle-label { display: block; width: 2.75rem; height: 1.6rem; background: #cbd5e1; border-radius: 9999px; cursor: pointer; transition: background 0.3s; }
+        .toggle-checkbox:checked+.toggle-label { background: var(--accent); }
+        .toast { position: fixed; bottom: 1.5rem; right: 1.5rem; background: var(--surface); border: 1px solid var(--border); box-shadow: 0 10px 30px rgba(0,0,0,0.15); border-radius: var(--radius-md); padding: 1rem 1.25rem; display: flex; align-items: center; gap: 0.75rem; transform: translateY(120%); opacity: 0; transition: transform 0.3s, opacity 0.3s; z-index: 9999; pointer-events: none; max-width: 380px; }
+        .toast.show { transform: translateY(0); opacity: 1; pointer-events: auto; }
+        .modal-backdrop { background: rgba(0,0,0,0.4); backdrop-filter: blur(4px); position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; z-index: 50; padding: 1rem; }
+        .badge { display: inline-flex; align-items: center; gap: 0.25rem; padding: 0.125rem 0.625rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; background: var(--accent-light); color: var(--accent); }
+        .tooltip { position: relative; display: inline-flex; }
+        .tooltip .tooltip-text { visibility: hidden; background-color: #1e293b; color: #fff; text-align: center; border-radius: var(--radius-sm); padding: 0.5rem 0.75rem; position: absolute; z-index: 100; bottom: 125%; left: 50%; transform: translateX(-50%); white-space: nowrap; font-size: 0.75rem; font-weight: 500; opacity: 0; transition: opacity 0.2s; pointer-events: none; }
+        .tooltip:hover .tooltip-text { visibility: visible; opacity: 1; }
+        .widget-toggle-label { transition: all 0.3s ease; }
+        .widget-toggle-label:hover { transform: scale(1.05); color: var(--accent); }
 
-        .btn-primary {
-            background-color: var(--accent);
-            color: white;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
-        }
-
-        .btn-primary:hover {
-            background-color: #1d4ed8;
-            box-shadow: 0 4px 12px rgba(37,99,235,0.3);
-        }
-
-        .btn-secondary {
-            background-color: transparent;
-            border: 1px solid var(--border);
-            color: var(--text);
-        }
-
-        .btn-secondary:hover {
-            background-color: var(--bg);
-            border-color: var(--accent);
-        }
-
-        .btn-success {
-            background-color: var(--success);
-            color: white;
-        }
-
-        .btn-success:hover {
-            background-color: #15803d;
-        }
-
-        .btn-danger {
-            background-color: var(--danger);
-            color: white;
-        }
-
-        .btn-danger:hover {
-            background-color: #b91c1c;
-        }
-
-        .btn-sm {
-            padding: 0.375rem 0.75rem;
-            font-size: 0.75rem;
-        }
-
-        .toggle-checkbox {
-            width: 1.25rem;
-            height: 1.25rem;
-            border-radius: 9999px;
-            border: 2px solid #cbd5e1;
-            background: white;
-            cursor: pointer;
-            position: absolute;
-            top: 0.175rem;
-            left: 0.175rem;
-            z-index: 10;
-            transition: all 0.3s;
-            appearance: none;
-        }
-
-        .toggle-checkbox:checked {
-            left: 1.35rem;
-            border-color: var(--accent);
-            background: white;
-        }
-
-        .toggle-label {
-            display: block;
-            width: 2.75rem;
-            height: 1.6rem;
-            background: #cbd5e1;
-            border-radius: 9999px;
-            cursor: pointer;
-            transition: background 0.3s;
-        }
-
-        .toggle-checkbox:checked+.toggle-label {
-            background: var(--accent);
-        }
-
-        .toast {
-            position: fixed;
-            bottom: 1.5rem;
-            right: 1.5rem;
-            background: var(--surface);
-            border: 1px solid var(--border);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-            border-radius: var(--radius-md);
-            padding: 1rem 1.25rem;
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            transform: translateY(120%);
-            opacity: 0;
-            transition: transform 0.3s, opacity 0.3s;
-            z-index: 9999;
-            pointer-events: none;
-            max-width: 380px;
-        }
-
-        .toast.show {
-            transform: translateY(0);
-            opacity: 1;
-            pointer-events: auto;
-        }
-
-        .modal-backdrop {
-            background: rgba(0,0,0,0.4);
-            backdrop-filter: blur(4px);
-            position: fixed;
-            inset: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 50;
-            padding: 1rem;
-        }
-
-        .badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.25rem;
-            padding: 0.125rem 0.625rem;
-            border-radius: 9999px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            background: var(--accent-light);
-            color: var(--accent);
-        }
-
-        .tooltip {
-            position: relative;
-            display: inline-flex;
-        }
-
-        .tooltip .tooltip-text {
-            visibility: hidden;
-            background-color: #1e293b;
-            color: #fff;
-            text-align: center;
-            border-radius: var(--radius-sm);
-            padding: 0.5rem 0.75rem;
-            position: absolute;
-            z-index: 100;
-            bottom: 125%;
-            left: 50%;
-            transform: translateX(-50%);
-            white-space: nowrap;
-            font-size: 0.75rem;
-            font-weight: 500;
-            opacity: 0;
-            transition: opacity 0.2s;
-            pointer-events: none;
-        }
-
-        .tooltip:hover .tooltip-text {
-            visibility: visible;
-            opacity: 1;
-        }
-
-        .widget-toggle-label {
-            transition: all 0.3s ease;
-        }
-
-        .widget-toggle-label:hover {
-            transform: scale(1.05);
-            color: var(--accent);
-        }
+        /* Tambahan animasi dan dekorasi */
+        .shimmer { background: linear-gradient(90deg, var(--border) 25%, transparent 50%, var(--border) 75%); background-size: 200% 100%; animation: shimmerAnim 1.5s infinite; }
+        @keyframes shimmerAnim { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
+        .fade-in { animation: fadeInUp 0.4s ease forwards; }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+        .pulse-dot { animation: pulse 2s infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+        .hover-lift { transition: transform 0.2s ease; }
+        .hover-lift:hover { transform: translateY(-2px); }
 
         @media (max-width: 640px) {
             .hide-mobile { display: none !important; }
+            .container-main { padding: 0 0.75rem; }
+            .card { border-radius: 0.75rem; }
         }
     </style>
 </head>
 <body class="antialiased">
 
-<!-- ==================== TOAST ==================== -->
+<!-- ==================== TOAST NOTIFICATION ==================== -->
 <div id="toast" class="toast">
     <div id="toastIcon" class="w-9 h-9 rounded-full flex items-center justify-center text-white"></div>
     <div>
@@ -353,34 +156,37 @@
     </div>
 </div>
 
-<!-- ==================== NAVIGATION ==================== -->
+<!-- ==================== NAVIGATION BAR ==================== -->
 <nav class="sticky top-0 z-40 border-b shadow-sm backdrop-blur-md" style="background: var(--surface); border-color: var(--border);">
     <div class="container-main flex items-center justify-between h-16">
+        <!-- Logo & Brand -->
         <div class="flex items-center gap-3">
             <div class="w-10 h-10 bg-primary-600 rounded-xl flex items-center justify-center text-white shadow-lg shadow-primary-600/20">
                 <i class="ph-fill ph-fish-simple text-2xl"></i>
             </div>
             <div>
                 <span class="font-extrabold text-xl tracking-tight" style="color: var(--text);">Cibitung<span class="text-primary-600">Frozen</span></span>
-                <p class="text-[10px] uppercase font-bold tracking-widest opacity-50 -mt-1">ERP Ultimate v5.2</p>
+                <p class="text-[10px] uppercase font-bold tracking-widest opacity-50 -mt-1">ERP Ultimate v5.3</p>
             </div>
         </div>
+        <!-- Status Indicator -->
         <div class="hidden lg:flex items-center gap-2 px-3 py-1.5 rounded-full bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800">
-            <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+            <span class="w-2 h-2 rounded-full bg-green-500 pulse-dot"></span>
             <span class="text-xs font-medium text-green-700 dark:text-green-400">Sistem Online</span>
         </div>
+        <!-- Right Actions -->
         <div class="flex items-center gap-2 sm:gap-3">
             <button onclick="CFS.App.backupData()" class="btn btn-secondary text-sm py-2 px-3 hidden sm:flex tooltip">
                 <i class="ph ph-download-simple"></i> <span class="hidden md:inline">Backup</span>
-                <span class="tooltip-text">Unduh semua data</span>
+                <span class="tooltip-text">Unduh semua data sebagai JSON</span>
             </button>
             <button onclick="CFS.App.restorePrompt()" class="btn btn-secondary text-sm py-2 px-3 hidden sm:flex tooltip">
                 <i class="ph ph-upload-simple"></i> <span class="hidden md:inline">Restore</span>
-                <span class="tooltip-text">Pulihkan data</span>
+                <span class="tooltip-text">Pulihkan data dari file backup</span>
             </button>
             <button onclick="toggleDarkMode()" class="p-2 rounded-xl border tooltip" style="border-color: var(--border);">
                 <i class="ph ph-moon text-lg" id="darkIcon"></i>
-                <span class="tooltip-text">Ganti tema</span>
+                <span class="tooltip-text">Ganti tema gelap/terang</span>
             </button>
         </div>
     </div>
@@ -388,14 +194,14 @@
 
 <!-- ==================== MAIN LAYOUT ==================== -->
 <div class="container-main py-6 flex-1 flex flex-col lg:flex-row gap-6" id="main-content">
-    <!-- ==================== SIDEBAR ==================== -->
+    <!-- ==================== SIDEBAR NAVIGATION ==================== -->
     <aside class="lg:w-72 flex-shrink-0">
         <div class="card sticky top-24 overflow-hidden">
             <div class="p-5 border-b" style="border-color: var(--border);">
                 <h3 class="font-bold text-sm uppercase tracking-wider opacity-70">📋 Modul Operasional</h3>
             </div>
             <nav class="p-2 space-y-1" id="tabs">
-                <button onclick="switchTab('tab-dashboard')" data-tab="tab-dashboard" class="tab-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl text-left transition active bg-primary-50 text-primary-700 font-semibold">
+                <button onclick="switchTab('tab-dashboard')" data-tab="tab-dashboard" class="tab-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl text-left transition active bg-primary-50 text-primary-700 font-semibold" aria-current="page">
                     <i class="ph ph-chart-bar text-lg"></i> Dashboard
                 </button>
                 <button onclick="switchTab('tab-stock')" data-tab="tab-stock" class="tab-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl text-left transition opacity-70 hover:opacity-100">
@@ -425,13 +231,13 @@
                 <h4 class="text-xs font-bold uppercase tracking-wider opacity-50 mb-2">💡 Tips Cepat</h4>
                 <p class="text-xs opacity-60 leading-relaxed">
                     Gunakan <strong>FEFO</strong> untuk produk frozen agar batch terdekat expired terjual lebih dulu.
-                    Backup data setiap minggu untuk keamanan.
+                    Backup data setiap minggu.
                 </p>
             </div>
-            <!-- Info Sistem Singkat -->
+            <!-- Info Sistem -->
             <div class="p-4 border-t mt-2" style="border-color: var(--border);">
                 <h4 class="text-xs font-bold uppercase tracking-wider opacity-50 mb-2">ℹ️ Info Sistem</h4>
-                <p class="text-xs opacity-50">Versi 5.2 · Build 2025</p>
+                <p class="text-xs opacity-50">Versi 5.3 · Build 2025</p>
                 <p class="text-xs opacity-50">Database: IndexedDB (lokal)</p>
                 <p class="text-xs opacity-50">Mode: <span id="sidebar-mode">Terang</span></p>
                 <p class="text-xs opacity-50">Shortcut: <kbd>Ctrl+B</kbd> Backup</p>
@@ -439,12 +245,12 @@
         </div>
     </aside>
 
-    <!-- ==================== MAIN CONTENT ==================== -->
+    <!-- ==================== MAIN CONTENT AREA ==================== -->
     <main class="flex-1 min-w-0">
 
         <!-- ==================== TAB DASHBOARD ==================== -->
         <div id="tab-dashboard" class="tab-content active space-y-6">
-            <!-- Header -->
+            <!-- Header Selamat Datang -->
             <div class="card p-5 flex flex-wrap items-center gap-4">
                 <div>
                     <h2 class="text-xl font-bold" style="color: var(--text);">👋 Selamat Datang, Owner</h2>
@@ -456,78 +262,86 @@
                     <span class="badge bg-amber-100 text-amber-700 hide-mobile"><i class="ph ph-clock mr-1"></i> Update: <span id="lastUpdate">sekarang</span></span>
                 </div>
             </div>
-
             <!-- Status Bar Ringkasan -->
             <div class="card p-4 grid grid-cols-2 md:grid-cols-4 gap-4 text-sm" id="statusBar">
-                <div><span class="opacity-60">Total Produk</span><p class="font-bold text-lg">9</p></div>
-                <div><span class="opacity-60">Stok Total</span><p class="font-bold text-lg" id="statusTotalStock">0 kg</p></div>
-                <div><span class="opacity-60">Batch Aktif</span><p class="font-bold text-lg" id="statusActiveBatches">0</p></div>
-                <div><span class="opacity-60">Batch Kritis</span><p class="font-bold text-lg text-red-600" id="statusCriticalBatches">0</p></div>
+                <div class="text-center"><span class="opacity-60">Total Produk</span><p class="font-bold text-xl">9</p></div>
+                <div class="text-center"><span class="opacity-60">Stok Total</span><p class="font-bold text-xl" id="statusTotalStock">0 kg</p></div>
+                <div class="text-center"><span class="opacity-60">Batch Aktif</span><p class="font-bold text-xl" id="statusActiveBatches">0</p></div>
+                <div class="text-center"><span class="opacity-60">Batch Kritis</span><p class="font-bold text-xl text-red-600" id="statusCriticalBatches">0</p></div>
             </div>
-
-            <!-- Widget Toggles -->
-            <div class="card p-4 flex flex-wrap items-center gap-3 text-sm animate-fade-in">
+            <!-- Widget Toggles dengan animasi -->
+            <div class="card p-4 flex flex-wrap items-center gap-3 text-sm fade-in">
                 <span class="font-medium opacity-60">Widget aktif:</span>
-                <label class="widget-toggle-label flex items-center gap-1 cursor-pointer">
+                <label class="widget-toggle-label flex items-center gap-1 cursor-pointer hover-lift">
                     <input type="checkbox" class="widget-toggle" data-widget="stockSummary" checked> 🐟 Stok
                 </label>
-                <label class="widget-toggle-label flex items-center gap-1 cursor-pointer">
+                <label class="widget-toggle-label flex items-center gap-1 cursor-pointer hover-lift">
                     <input type="checkbox" class="widget-toggle" data-widget="expiringBatches" checked> ⚠️ Expired
                 </label>
-                <label class="widget-toggle-label flex items-center gap-1 cursor-pointer">
+                <label class="widget-toggle-label flex items-center gap-1 cursor-pointer hover-lift">
                     <input type="checkbox" class="widget-toggle" data-widget="revenueChart" checked> 📊 Chart
                 </label>
-                <label class="widget-toggle-label flex items-center gap-1 cursor-pointer">
+                <label class="widget-toggle-label flex items-center gap-1 cursor-pointer hover-lift">
                     <input type="checkbox" class="widget-toggle" data-widget="profitLoss" checked> 💰 Laba
                 </label>
-                <label class="widget-toggle-label flex items-center gap-1 cursor-pointer">
+                <label class="widget-toggle-label flex items-center gap-1 cursor-pointer hover-lift">
                     <input type="checkbox" class="widget-toggle" data-widget="quickActions" checked> ⚡ Cepat
                 </label>
-                <label class="widget-toggle-label flex items-center gap-1 cursor-pointer">
+                <label class="widget-toggle-label flex items-center gap-1 cursor-pointer hover-lift">
                     <input type="checkbox" class="widget-toggle" data-widget="recentActivity" checked> 📜 Aktivitas
                 </label>
+                <label class="widget-toggle-label flex items-center gap-1 cursor-pointer hover-lift">
+                    <input type="checkbox" class="widget-toggle" data-widget="topProducts" checked> 🏆 Top Produk
+                </label>
             </div>
-
             <!-- Widget 1: Stok Summary -->
-            <div id="widget-stockSummary" class="card p-6">
+            <div id="widget-stockSummary" class="card p-6 fade-in">
                 <div class="flex items-center justify-between mb-4">
                     <h3 class="font-semibold flex items-center gap-2"><i class="ph ph-fish text-primary-600"></i> Stok Ikan Saat Ini</h3>
                     <button onclick="switchTab('tab-stock')" class="text-xs text-primary-600 hover:underline">Lihat detail →</button>
                 </div>
-                <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4" id="dashboardSummaryCards"></div>
+                <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4" id="dashboardSummaryCards">
+                    <!-- Akan diisi oleh JS: card stok per produk -->
+                </div>
             </div>
-
             <!-- Widget 2: Batch Expired -->
-            <div id="widget-expiringBatches" class="card p-6">
+            <div id="widget-expiringBatches" class="card p-6 fade-in">
                 <div class="flex items-center justify-between mb-3">
                     <h3 class="font-semibold flex items-center gap-2 text-red-600"><i class="ph ph-warning"></i> ⚠ Batch Hampir Kadaluarsa (≤7 hari)</h3>
                     <span class="text-xs text-red-400 font-medium">Periksa setiap hari</span>
                 </div>
-                <div id="expiringBatches" class="space-y-2 text-sm"></div>
+                <div id="expiringBatches" class="space-y-2 text-sm">
+                    <!-- Akan diisi oleh JS -->
+                </div>
             </div>
-
             <!-- Widget 3: Revenue Chart -->
-            <div id="widget-revenueChart" class="card p-6">
+            <div id="widget-revenueChart" class="card p-6 fade-in">
                 <h3 class="font-semibold mb-4 flex items-center gap-2"><i class="ph ph-chart-line-up text-green-600"></i> Pendapatan 7 Hari Terakhir</h3>
                 <canvas id="chartRevenue" height="220"></canvas>
             </div>
-
-            <!-- Widget 4: Laba Rugi -->
-            <div id="widget-profitLoss" class="card p-6">
+            <!-- Widget 4: Laba Rugi Bulanan -->
+            <div id="widget-profitLoss" class="card p-6 fade-in">
                 <h3 class="font-semibold mb-4 flex items-center gap-2"><i class="ph ph-chart-pie text-violet-600"></i> Laba Rugi Bulan Ini</h3>
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-4" id="financeSummary"></div>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4" id="financeSummary">
+                    <!-- Akan diisi oleh JS -->
+                </div>
             </div>
-
             <!-- Widget 5: Aktivitas Terbaru -->
-            <div id="widget-recentActivity" class="card p-6">
+            <div id="widget-recentActivity" class="card p-6 fade-in">
                 <h3 class="font-semibold mb-4 flex items-center gap-2"><i class="ph ph-activity text-slate-600"></i> Aktivitas Terbaru</h3>
                 <div id="recentActivityList" class="text-sm space-y-2 max-h-48 overflow-auto">
                     <p class="opacity-50">Belum ada aktivitas.</p>
                 </div>
             </div>
-
-            <!-- Widget 6: Quick Actions -->
-            <div id="widget-quickActions" class="card p-6">
+            <!-- Widget 6: Top Produk -->
+            <div id="widget-topProducts" class="card p-6 fade-in">
+                <h3 class="font-semibold mb-4 flex items-center gap-2"><i class="ph ph-medal text-amber-600"></i> Top 5 Produk Terlaris</h3>
+                <div id="topProductsList" class="text-sm space-y-2">
+                    <p class="opacity-50">Data akan muncul setelah ada transaksi.</p>
+                </div>
+            </div>
+            <!-- Widget 7: Quick Actions -->
+            <div id="widget-quickActions" class="card p-6 fade-in">
                 <h3 class="font-semibold mb-4 flex items-center gap-2"><i class="ph ph-lightning text-amber-600"></i> Aksi Cepat</h3>
                 <div class="flex flex-wrap gap-3">
                     <button onclick="switchTab('tab-stock')" class="btn btn-primary"><i class="ph ph-plus-circle"></i> Tambah Stok</button>
@@ -537,9 +351,8 @@
                     <button onclick="switchTab('tab-reports')" class="btn btn-secondary"><i class="ph ph-file-text"></i> Lihat Laporan</button>
                 </div>
             </div>
-
-            <!-- Widget 7: Tips & Trik -->
-            <div class="card p-6">
+            <!-- Widget 8: Tips & Trik -->
+            <div class="card p-6 fade-in">
                 <h3 class="font-semibold mb-4 flex items-center gap-2"><i class="ph ph-lightbulb text-yellow-600"></i> Tips & Trik</h3>
                 <ul class="list-disc list-inside text-sm space-y-2 opacity-80">
                     <li>Manfaatkan <strong>Preview Harga</strong> sebelum memproses penjualan.</li>
@@ -555,13 +368,15 @@
         <div id="tab-stock" class="tab-content space-y-6">
             <div class="card p-6">
                 <h2 class="text-xl font-bold mb-4 flex items-center gap-2"><i class="ph ph-package text-primary-600"></i> Manajemen Batch & Stok</h2>
-                <!-- Catatan -->
-                <div class="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg mb-4 text-sm">
+                <!-- Catatan Penting -->
+                <div class="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg mb-4 text-sm flex items-start gap-2">
+                    <i class="ph ph-info text-blue-600 mt-0.5"></i>
                     <p>📌 <strong>Catatan:</strong> Pastikan mengisi <em>tanggal kadaluarsa</em> dengan benar agar sistem memprioritaskan batch dengan metode FEFO.</p>
                 </div>
                 <!-- Tabel Ringkasan Stok -->
                 <div class="overflow-x-auto mb-6">
                     <table class="w-full text-sm">
+                        <caption class="text-xs opacity-50 mb-2 text-left">Tabel ringkasan stok per produk</caption>
                         <thead class="bg-slate-50 dark:bg-slate-800">
                             <tr>
                                 <th class="p-3 text-left">Produk</th>
@@ -571,12 +386,14 @@
                                 <th class="p-3 text-center">Aksi</th>
                             </tr>
                         </thead>
-                        <tbody id="stockTableBody"></tbody>
+                        <tbody id="stockTableBody">
+                            <!-- Akan diisi oleh JS -->
+                        </tbody>
                     </table>
                 </div>
                 <!-- Batch Terpakai Hari Ini -->
                 <div class="card p-4 mb-6 bg-slate-50 dark:bg-slate-800">
-                    <h3 class="font-semibold mb-2">📋 Batch Terpakai Hari Ini</h3>
+                    <h3 class="font-semibold mb-2 flex items-center gap-2"><i class="ph ph-clock text-slate-500"></i> Batch Terpakai Hari Ini</h3>
                     <div id="usedBatchesToday" class="text-sm opacity-70">Belum ada batch terpakai hari ini.</div>
                 </div>
                 <!-- Divider -->
@@ -607,7 +424,7 @@
                                 <option value="persen">Persentase (%)</option>
                                 <option value="nominal">Nominal (Rp)</option>
                             </select>
-                            <input type="number" id="stockPajakValue" placeholder="Nilai" class="hidden w-1/2" value="0">
+                            <input type="number" id="stockPajakValue" placeholder="Nilai Pajak" class="hidden w-1/2" value="0">
                         </div>
                     </div>
                     <input type="date" id="stockTglProduksi" required>
@@ -626,10 +443,12 @@
         <!-- Modal Detail Batch -->
         <div id="batchDetailModal" class="modal-backdrop hidden">
             <div class="card w-full max-w-5xl max-h-[85vh] overflow-auto p-6 relative">
-                <button onclick="document.getElementById('batchDetailModal').classList.add('hidden')" class="absolute top-4 right-4 text-2xl">&times;</button>
+                <button onclick="document.getElementById('batchDetailModal').classList.add('hidden')" class="absolute top-4 right-4 text-slate-500 hover:text-slate-800 text-2xl transition">&times;</button>
                 <h3 class="font-bold text-lg mb-4">📦 Detail Batch</h3>
                 <select id="batchProdukSelect" class="w-full mb-4"><option value="">Semua Produk</option></select>
-                <div id="batchDetailContent"></div>
+                <div id="batchDetailContent">
+                    <!-- Akan diisi oleh JS -->
+                </div>
             </div>
         </div>
 
@@ -637,6 +456,10 @@
         <div id="tab-sales" class="tab-content space-y-6">
             <div class="card p-6">
                 <h2 class="text-xl font-bold mb-4 flex items-center gap-2"><i class="ph ph-shopping-cart text-emerald-600"></i> Catat Penjualan</h2>
+                <div class="bg-emerald-50 dark:bg-emerald-900/10 p-4 rounded-lg mb-4 text-sm flex items-start gap-2">
+                    <i class="ph ph-info text-emerald-600 mt-0.5"></i>
+                    <p>Harga otomatis dihitung berdasarkan <strong>HPP + margin</strong>. Untuk partai besar, Anda bisa override harga manual.</p>
+                </div>
                 <form id="salesForm" class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <input type="text" id="salesKlien" placeholder="Nama Klien" required>
                     <select id="salesProduk" required><option value="">Pilih Produk</option></select>
@@ -654,11 +477,15 @@
                         <button type="button" id="printInvoiceBtn" class="btn btn-secondary" disabled>🖨️ Cetak Invoice</button>
                     </div>
                 </form>
-                <div id="salesResult" class="mt-4 p-4 bg-slate-50 dark:bg-slate-800 rounded-xl hidden"></div>
+                <div id="salesResult" class="mt-4 p-4 bg-slate-50 dark:bg-slate-800 rounded-xl hidden">
+                    <!-- Akan diisi oleh JS -->
+                </div>
                 <!-- Penjualan Hari Ini -->
                 <div class="mt-6">
-                    <h3 class="font-semibold mb-2">📋 Penjualan Hari Ini</h3>
-                    <div id="todaySalesList" class="text-sm space-y-2 max-h-48 overflow-auto"><p class="opacity-50">Belum ada penjualan hari ini.</p></div>
+                    <h3 class="font-semibold mb-2 flex items-center gap-2"><i class="ph ph-list-checks text-slate-500"></i> Penjualan Hari Ini</h3>
+                    <div id="todaySalesList" class="text-sm space-y-2 max-h-48 overflow-auto">
+                        <p class="opacity-50">Belum ada penjualan hari ini.</p>
+                    </div>
                 </div>
                 <!-- Tips Margin -->
                 <div class="mt-4 p-4 bg-emerald-50 dark:bg-emerald-900/20 rounded-lg text-sm">
@@ -672,19 +499,41 @@
         <div id="tab-crm" class="tab-content space-y-6">
             <div class="card p-6">
                 <h2 class="text-xl font-bold mb-4 flex items-center gap-2"><i class="ph ph-users text-indigo-600"></i> CRM Pelanggan</h2>
+                <!-- Statistik Utama -->
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6" id="crmStats">
-                    <div class="card p-4 text-center"><p class="text-xs opacity-60">Total Pelanggan</p><p class="text-2xl font-bold" id="crmTotalCustomers">0</p></div>
-                    <div class="card p-4 text-center"><p class="text-xs opacity-60">Total Pendapatan</p><p class="text-2xl font-bold" id="crmTotalRevenue">Rp 0</p></div>
-                    <div class="card p-4 text-center"><p class="text-xs opacity-60">Pelanggan Aktif (30 hari)</p><p class="text-2xl font-bold" id="crmActiveCustomers">0</p></div>
+                    <div class="card p-4 text-center hover-lift">
+                        <p class="text-xs opacity-60">Total Pelanggan</p>
+                        <p class="text-2xl font-bold" id="crmTotalCustomers">0</p>
+                    </div>
+                    <div class="card p-4 text-center hover-lift">
+                        <p class="text-xs opacity-60">Total Pendapatan</p>
+                        <p class="text-2xl font-bold" id="crmTotalRevenue">Rp 0</p>
+                    </div>
+                    <div class="card p-4 text-center hover-lift">
+                        <p class="text-xs opacity-60">Pelanggan Aktif (30 hari)</p>
+                        <p class="text-2xl font-bold" id="crmActiveCustomers">0</p>
+                    </div>
                 </div>
                 <!-- Segmentasi Pelanggan -->
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6 text-sm">
-                    <div class="card p-3 text-center"><span class="opacity-60">Top</span><p class="font-bold text-lg" id="segTop">0</p></div>
-                    <div class="card p-3 text-center"><span class="opacity-60">Regular</span><p class="font-bold text-lg" id="segRegular">0</p></div>
-                    <div class="card p-3 text-center"><span class="opacity-60">New</span><p class="font-bold text-lg" id="segNew">0</p></div>
-                    <div class="card p-3 text-center"><span class="opacity-60">Churn Risk</span><p class="font-bold text-lg text-red-600" id="segChurn">0</p></div>
+                    <div class="card p-3 text-center hover-lift">
+                        <span class="opacity-60">🏆 Top</span>
+                        <p class="font-bold text-lg" id="segTop">0</p>
+                    </div>
+                    <div class="card p-3 text-center hover-lift">
+                        <span class="opacity-60">⭐ Regular</span>
+                        <p class="font-bold text-lg" id="segRegular">0</p>
+                    </div>
+                    <div class="card p-3 text-center hover-lift">
+                        <span class="opacity-60">🆕 New</span>
+                        <p class="font-bold text-lg" id="segNew">0</p>
+                    </div>
+                    <div class="card p-3 text-center hover-lift">
+                        <span class="opacity-60">⚠️ Churn Risk</span>
+                        <p class="font-bold text-lg text-red-600" id="segChurn">0</p>
+                    </div>
                 </div>
-                <!-- Header dengan Tombol Ekspor -->
+                <!-- Header Tabel & Tombol Ekspor -->
                 <div class="flex justify-between items-center mb-3">
                     <h3 class="font-semibold">Daftar Pelanggan</h3>
                     <button id="exportCustomersCSV" class="btn btn-sm btn-secondary"><i class="ph ph-file-csv"></i> Ekspor CSV</button>
@@ -692,8 +541,19 @@
                 <!-- Tabel Pelanggan -->
                 <div class="overflow-x-auto">
                     <table class="w-full text-sm">
-                        <thead><tr><th class="p-2 text-left">Nama</th><th class="p-2 text-right">Total Pembelian</th><th class="p-2 text-right">Transaksi</th><th class="p-2 text-right">Terakhir Beli</th><th class="p-2 text-center">Status</th><th class="p-2 text-center">Aksi</th></tr></thead>
-                        <tbody id="crmTableBody"><tr><td colspan="6" class="text-center p-4 opacity-50">Belum ada data pelanggan</td></tr></tbody>
+                        <thead>
+                            <tr>
+                                <th class="p-2 text-left">Nama</th>
+                                <th class="p-2 text-right">Total Pembelian</th>
+                                <th class="p-2 text-right">Transaksi</th>
+                                <th class="p-2 text-right">Terakhir Beli</th>
+                                <th class="p-2 text-center">Status</th>
+                                <th class="p-2 text-center">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="crmTableBody">
+                            <tr><td colspan="6" class="text-center p-4 opacity-50">Belum ada data pelanggan</td></tr>
+                        </tbody>
                     </table>
                 </div>
             </div>
@@ -704,7 +564,7 @@
             <div class="card w-full max-w-md p-6 text-center">
                 <i class="ph ph-warning-circle text-5xl text-red-500 mx-auto mb-3"></i>
                 <h3 class="text-lg font-bold mb-2">Hapus Pelanggan?</h3>
-                <p class="text-sm opacity-70 mb-4">Data pelanggan <strong id="deleteCustomerName"></strong> akan dihapus permanen. Riwayat transaksi tetap tersimpan.</p>
+                <p class="text-sm opacity-70 mb-4">Data pelanggan <strong id="deleteCustomerName"></strong> akan dihapus permanen. Riwayat transaksi tetap aman.</p>
                 <div class="flex gap-3 justify-center">
                     <button onclick="document.getElementById('deleteCustomerModal').classList.add('hidden')" class="btn btn-secondary">Batal</button>
                     <button id="confirmDeleteCustomer" class="btn btn-danger">Ya, Hapus</button>
@@ -716,10 +576,13 @@
         <div id="tab-finance" class="tab-content space-y-6">
             <div class="card p-6">
                 <h2 class="text-xl font-bold mb-4 flex items-center gap-2"><i class="ph ph-wallet text-primary-600"></i> Keuangan & Akuntansi</h2>
-                <div id="financeSummaryContainer" class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6"></div>
+                <div id="financeSummaryContainer" class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+                    <!-- Akan diisi oleh JS -->
+                </div>
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <!-- Form Beban -->
                     <div class="card p-4">
-                        <h3 class="font-semibold mb-3">📝 Catat Beban Operasional</h3>
+                        <h3 class="font-semibold mb-3 flex items-center gap-2"><i class="ph ph-receipt text-slate-500"></i> Catat Beban Operasional</h3>
                         <form id="expenseForm" class="space-y-3">
                             <select id="expenseAkun">
                                 <option value="Beban Operasional">Beban Operasional</option>
@@ -729,16 +592,18 @@
                                 <option value="Beban Transport">Beban Transport</option>
                             </select>
                             <input type="number" id="expenseJumlah" placeholder="Jumlah (Rp)" required>
-                            <input type="text" id="expenseDeskripsi" placeholder="Deskripsi">
+                            <input type="text" id="expenseDeskripsi" placeholder="Deskripsi (opsional)">
                             <button type="submit" class="btn btn-primary w-full">💾 Simpan Beban</button>
                         </form>
                     </div>
+                    <!-- Laporan & Ekspor -->
                     <div class="card p-4">
-                        <h3 class="font-semibold mb-3">📊 Laporan & Ekspor</h3>
+                        <h3 class="font-semibold mb-3 flex items-center gap-2"><i class="ph ph-file-text text-slate-500"></i> Laporan & Ekspor</h3>
                         <button id="exportExcelBtn" class="btn btn-success w-full mb-2"><i class="ph ph-file-xls"></i> Ekspor Jurnal Bulan Ini (Excel)</button>
                         <button id="viewJournalBtn" class="btn btn-secondary w-full"><i class="ph ph-book-open"></i> Lihat Buku Besar</button>
                     </div>
                 </div>
+                <!-- Buku Besar -->
                 <div id="journalViewer" class="mt-6 hidden">
                     <h3 class="font-semibold mb-2">📖 Buku Besar (Jurnal)</h3>
                     <div class="overflow-x-auto max-h-64">
@@ -748,19 +613,19 @@
                         </table>
                     </div>
                 </div>
-                <!-- Grafik Tahunan -->
+                <!-- Grafik Laba Rugi Tahunan -->
                 <div class="mt-6 card p-4">
-                    <h3 class="font-semibold mb-2">📈 Grafik Laba Rugi Tahunan</h3>
+                    <h3 class="font-semibold mb-2 flex items-center gap-2"><i class="ph ph-chart-bar text-blue-500"></i> Grafik Laba Rugi Tahunan</h3>
                     <canvas id="chartYearlyPL" height="150"></canvas>
                 </div>
                 <!-- Arus Kas -->
                 <div class="mt-4 card p-4">
-                    <h3 class="font-semibold mb-2">💵 Arus Kas (Sederhana)</h3>
+                    <h3 class="font-semibold mb-2 flex items-center gap-2"><i class="ph ph-bank text-slate-500"></i> Arus Kas (Sederhana)</h3>
                     <div id="cashflowSummary" class="text-sm opacity-70">Data akan terisi setelah beberapa transaksi dan beban tercatat.</div>
                 </div>
                 <!-- Catatan Pajak -->
                 <div class="mt-4 p-4 bg-amber-50 dark:bg-amber-900/20 rounded-lg text-sm">
-                    <h4 class="font-semibold mb-2">📌 Catatan Pajak</h4>
+                    <h4 class="font-semibold mb-2 flex items-center gap-2"><i class="ph ph-scales text-amber-600"></i> Catatan Pajak</h4>
                     <p class="opacity-80">PPN dihitung otomatis dari DPP. PPh 25 dan PPh 21 dihitung dari laba bersih. Pastikan pengaturan pajak sudah benar di tab <strong>Pengaturan</strong>.</p>
                 </div>
             </div>
@@ -770,28 +635,53 @@
         <div id="tab-history" class="tab-content space-y-6">
             <div class="card p-6">
                 <h2 class="text-xl font-bold mb-4 flex items-center gap-2"><i class="ph ph-clock-counter-clockwise text-amber-600"></i> Riwayat Transaksi</h2>
+                <!-- Filter -->
                 <form id="filterTransaksi" class="flex flex-wrap gap-3 mb-4">
                     <select id="filterProduk"><option value="">Semua Produk</option></select>
                     <input type="text" id="filterKlien" placeholder="Nama Klien">
                     <input type="date" id="filterStart"> <input type="date" id="filterEnd">
                     <button type="submit" class="btn btn-primary">Filter</button>
                 </form>
+                <!-- Tabel Riwayat -->
                 <div class="overflow-x-auto">
                     <table class="w-full text-sm">
-                        <thead><tr><th class="p-2">Tanggal</th><th>Klien</th><th>Produk</th><th>Qty</th><th>Invoice</th><th>Tier</th></tr></thead>
-                        <tbody id="historyTableBody"><tr><td colspan="6" class="text-center p-4 opacity-50">Belum ada transaksi</td></tr></tbody>
+                        <thead>
+                            <tr>
+                                <th class="p-2">Tanggal</th>
+                                <th class="p-2">Klien</th>
+                                <th class="p-2">Produk</th>
+                                <th class="p-2 text-right">Qty</th>
+                                <th class="p-2 text-right">Invoice</th>
+                                <th class="p-2 text-center">Tier</th>
+                            </tr>
+                        </thead>
+                        <tbody id="historyTableBody">
+                            <tr><td colspan="6" class="text-center p-4 opacity-50">Belum ada transaksi</td></tr>
+                        </tbody>
                     </table>
                 </div>
                 <!-- Statistik Riwayat -->
                 <div class="mt-6 grid grid-cols-2 md:grid-cols-4 gap-4 text-sm" id="historyStats">
-                    <div class="card p-3 text-center"><span class="opacity-60">Total Transaksi</span><p class="font-bold" id="historyTotalTrx">0</p></div>
-                    <div class="card p-3 text-center"><span class="opacity-60">Total Pendapatan</span><p class="font-bold" id="historyTotalRevenue">Rp 0</p></div>
-                    <div class="card p-3 text-center"><span class="opacity-60">Rata-rata/hari</span><p class="font-bold" id="historyAvgDaily">Rp 0</p></div>
-                    <div class="card p-3 text-center"><span class="opacity-60">Transaksi Hari Ini</span><p class="font-bold" id="historyTodayTrx">0</p></div>
+                    <div class="card p-3 text-center hover-lift">
+                        <span class="opacity-60">Total Transaksi</span>
+                        <p class="font-bold" id="historyTotalTrx">0</p>
+                    </div>
+                    <div class="card p-3 text-center hover-lift">
+                        <span class="opacity-60">Total Pendapatan</span>
+                        <p class="font-bold" id="historyTotalRevenue">Rp 0</p>
+                    </div>
+                    <div class="card p-3 text-center hover-lift">
+                        <span class="opacity-60">Rata-rata/hari</span>
+                        <p class="font-bold" id="historyAvgDaily">Rp 0</p>
+                    </div>
+                    <div class="card p-3 text-center hover-lift">
+                        <span class="opacity-60">Transaksi Hari Ini</span>
+                        <p class="font-bold" id="historyTodayTrx">0</p>
+                    </div>
                 </div>
-                <!-- Grafik Riwayat Pendapatan -->
+                <!-- Grafik Riwayat -->
                 <div class="mt-4 card p-4">
-                    <h3 class="font-semibold mb-2">📈 Grafik Riwayat Pendapatan (30 Hari)</h3>
+                    <h3 class="font-semibold mb-2 flex items-center gap-2"><i class="ph ph-chart-line text-blue-500"></i> Grafik Riwayat Pendapatan (30 Hari)</h3>
                     <canvas id="chartHistoryRevenue" height="150"></canvas>
                 </div>
             </div>
@@ -801,13 +691,16 @@
         <div id="tab-reports" class="tab-content space-y-6">
             <div class="card p-6">
                 <h2 class="text-xl font-bold mb-6 flex items-center gap-2"><i class="ph ph-file-text text-violet-600"></i> Laporan Keuangan</h2>
+                <!-- Laba Rugi & Neraca -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
-                        <h3 class="font-semibold mb-2">📈 Laba Rugi</h3>
-                        <div id="reportLabaRugi" class="text-sm p-4 bg-slate-50 dark:bg-slate-800 rounded-xl"></div>
+                        <h3 class="font-semibold mb-2 flex items-center gap-2"><i class="ph ph-trend-up text-green-600"></i> Laba Rugi</h3>
+                        <div id="reportLabaRugi" class="text-sm p-4 bg-slate-50 dark:bg-slate-800 rounded-xl">
+                            <!-- Akan diisi oleh JS -->
+                        </div>
                     </div>
                     <div>
-                        <h3 class="font-semibold mb-2">⚖️ Neraca</h3>
+                        <h3 class="font-semibold mb-2 flex items-center gap-2"><i class="ph ph-buildings text-blue-600"></i> Neraca</h3>
                         <div id="reportNeraca" class="text-sm p-4 bg-slate-50 dark:bg-slate-800 rounded-xl space-y-3">
                             <div><strong>Aset</strong><div id="neracaAset"></div></div>
                             <div><strong>Kewajiban</strong><div id="neracaKewajiban"></div></div>
@@ -816,13 +709,24 @@
                         </div>
                     </div>
                 </div>
+                <!-- Divider -->
                 <div style="border-top:1px solid var(--border); margin: 1.5rem 0;"></div>
+                <!-- Laporan Tambahan -->
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
-                    <div class="card p-4"><h3 class="font-semibold mb-2">📦 Laporan Stok</h3><div id="reportStok" class="text-sm space-y-1"></div></div>
-                    <div class="card p-4"><h3 class="font-semibold mb-2">💰 Margin per Produk</h3><div id="reportMargin" class="text-sm space-y-1"></div></div>
-                    <div class="card p-4"><h3 class="font-semibold mb-2">📈 Proyeksi Keuangan</h3><div id="reportProyeksi" class="text-sm space-y-1"></div></div>
+                    <div class="card p-4 hover-lift">
+                        <h3 class="font-semibold mb-2 flex items-center gap-2"><i class="ph ph-package text-slate-500"></i> Laporan Stok</h3>
+                        <div id="reportStok" class="text-sm space-y-1"></div>
+                    </div>
+                    <div class="card p-4 hover-lift">
+                        <h3 class="font-semibold mb-2 flex items-center gap-2"><i class="ph ph-money text-emerald-500"></i> Margin per Produk</h3>
+                        <div id="reportMargin" class="text-sm space-y-1"></div>
+                    </div>
+                    <div class="card p-4 hover-lift">
+                        <h3 class="font-semibold mb-2 flex items-center gap-2"><i class="ph ph-chart-line-up text-violet-500"></i> Proyeksi Keuangan</h3>
+                        <div id="reportProyeksi" class="text-sm space-y-1"></div>
+                    </div>
                 </div>
-                <!-- Penjelasan Laporan -->
+                <!-- Keterangan Laporan -->
                 <div class="mt-6 p-4 bg-slate-50 dark:bg-slate-800 rounded-xl text-sm">
                     <h4 class="font-semibold mb-2">📋 Keterangan Laporan</h4>
                     <ul class="list-disc list-inside space-y-1 opacity-70">
@@ -840,28 +744,37 @@
         <div id="tab-settings" class="tab-content space-y-6">
             <div class="card p-6">
                 <h2 class="text-xl font-bold mb-6 flex items-center gap-2"><i class="ph ph-gear text-slate-600"></i> Pengaturan Bisnis</h2>
+                <!-- Grid Pengaturan -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div class="space-y-3">
-                        <div><label>PPN (%)</label><input type="number" id="setPPN" value="12" class="w-full"></div>
-                        <div><label>PPh 25 (%)</label><input type="number" id="setPPh25" value="2" class="w-full"></div>
-                        <div><label>PPh 21 (%)</label><input type="number" id="setPPh21" value="5" class="w-full"></div>
-                        <div><label>PT Share (%)</label><input type="number" id="setPTShare" value="60" class="w-full"></div>
-                        <div><label>Min Grosir (kg)</label><input type="number" id="setMinGrosir" value="10" class="w-full"></div>
+                        <div><label class="text-sm font-medium">PPN (%)</label><input type="number" id="setPPN" value="12" class="w-full"></div>
+                        <div><label class="text-sm font-medium">PPh 25 (%)</label><input type="number" id="setPPh25" value="2" class="w-full"></div>
+                        <div><label class="text-sm font-medium">PPh 21 (%)</label><input type="number" id="setPPh21" value="5" class="w-full"></div>
+                        <div><label class="text-sm font-medium">PT Share (%)</label><input type="number" id="setPTShare" value="60" class="w-full"></div>
+                        <div><label class="text-sm font-medium">Min Grosir (kg)</label><input type="number" id="setMinGrosir" value="10" class="w-full"></div>
                     </div>
                     <div class="space-y-3">
-                        <div><label>Min Partai (kg)</label><input type="number" id="setMinPartai" value="500" class="w-full"></div>
-                        <div><label>Selisih Grosir dari Ecer (Rp)</label><input type="number" id="setSelisihGrosir" value="5000" class="w-full"></div>
-                        <div><label>Margin Default (Rp/kg)</label><input type="number" id="setMarginDefault" value="15000" class="w-full"></div>
-                        <div><label>Metode Penyimpanan</label>
+                        <div><label class="text-sm font-medium">Min Partai (kg)</label><input type="number" id="setMinPartai" value="500" class="w-full"></div>
+                        <div><label class="text-sm font-medium">Selisih Grosir dari Ecer (Rp)</label><input type="number" id="setSelisihGrosir" value="5000" class="w-full"></div>
+                        <div><label class="text-sm font-medium">Margin Default (Rp/kg)</label><input type="number" id="setMarginDefault" value="15000" class="w-full"></div>
+                        <div>
+                            <label class="text-sm font-medium">Metode Penyimpanan</label>
                             <select id="setStorageMethod" class="w-full">
                                 <option value="none">Tidak Ada</option>
                                 <option value="flat_monthly">Flat Bulanan</option>
                                 <option value="per_kg_day">Harian per Kg</option>
                             </select>
                         </div>
-                        <div id="storageFlatInput"><label>Biaya Sewa Bulanan (Rp)</label><input type="number" id="setStorageFlat" value="0" class="w-full"></div>
-                        <div id="storagePerKgInput" class="hidden"><label>Biaya per Kg per Hari (Rp)</label><input type="number" id="setStoragePerKg" value="0" class="w-full"></div>
-                        <div><label>Alokasi Stok</label>
+                        <div id="storageFlatInput">
+                            <label class="text-sm font-medium">Biaya Sewa Bulanan (Rp)</label>
+                            <input type="number" id="setStorageFlat" value="0" class="w-full">
+                        </div>
+                        <div id="storagePerKgInput" class="hidden">
+                            <label class="text-sm font-medium">Biaya per Kg per Hari (Rp)</label>
+                            <input type="number" id="setStoragePerKg" value="0" class="w-full">
+                        </div>
+                        <div>
+                            <label class="text-sm font-medium">Alokasi Stok</label>
                             <select id="setFifoMethod" class="w-full">
                                 <option value="fefo">FEFO (Kadaluarsa Terdekat)</option>
                                 <option value="fifo">FIFO (Masuk Pertama)</option>
@@ -873,7 +786,7 @@
 
                 <!-- Profil Usaha untuk Invoice -->
                 <div class="mt-8 card p-4">
-                    <h3 class="font-semibold mb-3">🏢 Profil Usaha (untuk Invoice)</h3>
+                    <h3 class="font-semibold mb-3 flex items-center gap-2"><i class="ph ph-storefront text-slate-500"></i> Profil Usaha (untuk Invoice)</h3>
                     <form id="companyProfileForm" class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <input type="text" id="companyName" placeholder="Nama Usaha" value="Cibitung Frozen">
                         <input type="text" id="companyAddress" placeholder="Alamat" value="Jl. Industri No.1">
@@ -883,7 +796,7 @@
                     </form>
                 </div>
 
-                <!-- RESET ULANG DATA -->
+                <!-- Reset Ulang Data -->
                 <div class="mt-8 card p-4 border-red-200 dark:border-red-800 bg-red-50/30 dark:bg-red-900/10">
                     <h3 class="font-semibold mb-3 text-red-700 dark:text-red-400 flex items-center gap-2">
                         <i class="ph ph-warning-circle text-xl"></i> Reset Ulang Semua Data
@@ -898,7 +811,7 @@
 
                 <!-- Backup & Keamanan -->
                 <div class="mt-6 card p-4">
-                    <h3 class="font-semibold mb-3">☁️ Backup & Keamanan</h3>
+                    <h3 class="font-semibold mb-3 flex items-center gap-2"><i class="ph ph-cloud-arrow-up text-slate-500"></i> Backup & Keamanan</h3>
                     <p class="text-sm opacity-70">Data Anda disimpan di browser. Lakukan backup manual secara berkala menggunakan tombol di pojok kanan atas, atau gunakan <kbd>Ctrl+B</kbd>.</p>
                     <button onclick="CFS.App.backupData()" class="btn btn-primary mt-2"><i class="ph ph-download-simple"></i> Backup Sekarang</button>
                 </div>
@@ -911,7 +824,7 @@
 <!-- ==================== FOOTER ==================== -->
 <footer class="border-t mt-auto py-4" style="background: var(--surface); border-color: var(--border);">
     <div class="container-main text-center text-xs opacity-50">
-        <p>&copy; 2025 <strong>Cibitung Frozen</strong> — ERP Ultimate v5.2</p>
+        <p>&copy; 2025 <strong>Cibitung Frozen</strong> — ERP Ultimate v5.3</p>
     </div>
 </footer>
 
