@@ -35,6 +35,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
     <script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <!-- Tailwind Configuration untuk tema kustom -->
     <script>
         tailwind.config = {
@@ -591,7 +592,7 @@
             </div>
             <div>
                 <span class="font-extrabold text-xl tracking-tight" style="color: var(--text);">Cibitung<span class="text-primary-600">Frozen</span></span>
-                <p class="text-[10px] uppercase font-bold tracking-widest opacity-50 -mt-1" style="color: var(--text-secondary);">ERP Ultimate v5.0</p>
+                <p class="text-[10px] uppercase font-bold tracking-widest opacity-50 -mt-1" style="color: var(--text-secondary);">ERP Ultimate</p>
             </div>
         </div>
         
@@ -666,9 +667,6 @@
                <div class="mt-4 space-y-1">
                 <button onclick="switchTab('tab-crm')" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-left text-sm font-medium opacity-70 hover:opacity-100 transition hover:bg-slate-50 dark:hover:bg-slate-800">
                 <i class="ph ph-users text-lg"></i> CRM Pelanggan
-                </button>
-                <button onclick="switchTab('tab-reports')" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-left text-sm font-medium opacity-70 hover:opacity-100 transition hover:bg-slate-50 dark:hover:bg-slate-800">
-                <i class="ph ph-file-text text-lg"></i> Laporan Keuangan
                 </button>
                 </div>
             </nav>
@@ -955,6 +953,24 @@
             </div>
         </div>
 
+                <!-- ==================== TAB CRM ==================== -->
+        <div id="tab-crm" class="tab-content space-y-6">
+            <div class="card p-6">
+                <h2 class="text-xl font-bold mb-4 flex items-center gap-2"><i class="ph ph-users text-indigo-600"></i> CRM Pelanggan</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6" id="crmStats">
+                    <div class="card p-4 text-center"><p class="text-xs opacity-60">Total Pelanggan</p><p class="text-2xl font-bold" id="crmTotalCustomers">0</p></div>
+                    <div class="card p-4 text-center"><p class="text-xs opacity-60">Total Pendapatan</p><p class="text-2xl font-bold" id="crmTotalRevenue">Rp 0</p></div>
+                    <div class="card p-4 text-center"><p class="text-xs opacity-60">Pelanggan Aktif (30 hari)</p><p class="text-2xl font-bold" id="crmActiveCustomers">0</p></div>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm">
+                        <thead><tr><th class="p-2 text-left">Nama</th><th class="p-2 text-right">Total Pembelian</th><th class="p-2 text-right">Transaksi</th><th class="p-2 text-right">Terakhir Beli</th><th class="p-2 text-center">Status</th></tr></thead>
+                        <tbody id="crmTableBody"><tr><td colspan="5" class="text-center p-4 opacity-50">Belum ada data pelanggan</td></tr></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
         <!-- ==================== TAB LAPORAN ==================== -->
         <div id="tab-reports" class="tab-content space-y-6">
             <div class="card p-6">
@@ -969,11 +985,20 @@
                         <div id="reportNeraca" class="text-sm p-4 bg-slate-50 dark:bg-slate-800 rounded-xl"></div>
                     </div>
                 </div>
-                <div class="divider"></div>
-                <div class="placeholder-section">
-                    <i class="ph ph-chart-bar text-3xl mb-2 block opacity-30"></i>
-                    <p class="font-medium">Laporan lebih detail akan hadir di versi berikutnya.</p>
-                    <p class="text-xs opacity-50 mt-1">Termasuk: Laporan Stok, Margin per Produk, dan Proyeksi Keuangan.</p>
+                                <div class="divider"></div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+                    <div class="card p-4">
+                        <h3 class="font-semibold mb-2">📦 Laporan Stok</h3>
+                        <div id="reportStok" class="text-sm space-y-1"></div>
+                    </div>
+                    <div class="card p-4">
+                        <h3 class="font-semibold mb-2">💰 Margin per Produk</h3>
+                        <div id="reportMargin" class="text-sm space-y-1"></div>
+                    </div>
+                    <div class="card p-4">
+                        <h3 class="font-semibold mb-2">📈 Proyeksi Keuangan</h3>
+                        <div id="reportProyeksi" class="text-sm space-y-1"></div>
+                    </div>
                 </div>
             </div>
         </div>
