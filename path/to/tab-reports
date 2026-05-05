@@ -1,0 +1,15 @@
+                <div class="divider"></div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+                    <div class="card p-4">
+                        <h3 class="font-semibold mb-2">📦 Laporan Stok</h3>
+                        <div id="reportStok" class="text-sm space-y-1"></div>
+                    </div>
+                    <div class="card p-4">
+                        <h3 class="font-semibold mb-2">💰 Margin per Produk</h3>
+                        <div id="reportMargin" class="text-sm space-y-1"></div>
+                    </div>
+                    <div class="card p-4">
+                        <h3 class="font-semibold mb-2">📈 Proyeksi Keuangan</h3>
+                        <div id="reportProyeksi" class="text-sm space-y-1"></div>
+                    </div>
+                </div>
