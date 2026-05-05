@@ -1,42 +1,62 @@
 // js/sales.js
 CFS.Sales = {
+    CUSTOMERS_KEY: 'customers',
+
     async calculatePricing(productName, qty, tier, manualHarga = null) {
         const settings = await CFS.Settings.get();
         const usedBatches = await CFS.Inventory.allocateStock(productName, qty);
-        let totalHPP = usedBatches.reduce((sum, b) => sum + b.qty * b.harga_per_kg, 0);
-        for (let u of usedBatches) {
-            const batch = (await CFS.Inventory.getBatches()).find(b => b.id === u.id);
-            if (batch) totalHPP += await CFS.Inventory.getStorageCostForBatch(batch, u.qty, settings);
+        if (!usedBatches || usedBatches.length === 0) {
+            throw new Error('Gagal mengalokasikan stok.');
+        }
+        let totalHPP = usedBatches.reduce((sum, b) => sum + (b.qty * b.harga_per_kg), 0);
+        // Tambahkan biaya penyimpanan
+        const batches = await CFS.Inventory.getBatches();
+        for (let ub of usedBatches) {
+            const batch = batches.find(b => b.id === ub.id);
+            if (batch) {
+                totalHPP += await CFS.Inventory.getStorageCostForBatch(batch, ub.qty, settings);
+            }
         }
         const hppAvg = totalHPP / qty;
         const hargaEcer = hppAvg + settings.marginDefault;
-        let hargaJual;
+        let hargaJualPerKg;
         if (tier === 'grosir') {
-            hargaJual = hargaEcer - settings.selisihGrosir;
-            if (hargaJual < hppAvg) hargaJual = hppAvg;
+            hargaJualPerKg = hargaEcer - settings.selisihGrosir;
+            if (hargaJualPerKg < hppAvg) hargaJualPerKg = hppAvg;
         } else if (tier === 'partai') {
-            hargaJual = manualHarga || hargaEcer;
+            hargaJualPerKg = manualHarga || hargaEcer;
         } else {
-            hargaJual = hargaEcer;
+            hargaJualPerKg = hargaEcer;
         }
-        if (manualHarga && tier !== 'partai') hargaJual = manualHarga;
-        const dppTotal = hargaJual * qty;
+        if (manualHarga && tier !== 'partai') hargaJualPerKg = manualHarga;
+        const dppTotal = hargaJualPerKg * qty;
         const ppn = dppTotal * (settings.ppn / 100);
         const totalInvoice = dppTotal + ppn;
-        return { usedBatches, totalHPP, hppAvg, hargaEcer, hargaJual, dppTotal, ppn, totalInvoice, tier };
+        return {
+            usedBatches,
+            totalHPP,
+            hppAvg,
+            hargaEcer,
+            hargaJual: hargaJualPerKg,
+            dppTotal,
+            ppn,
+            totalInvoice,
+            tier
+        };
     },
 
     async previewPricing(productName, qty, tier, manualHarga = null) {
-        if (!productName || qty <= 0) return null;
+        if (!productName || qty <= 0) return { error: 'Produk dan jumlah harus diisi.' };
         const settings = await CFS.Settings.get();
         const summary = await CFS.Inventory.getStockSummary();
         const available = summary[productName] || 0;
         if (qty > available) return { error: `Stok tidak cukup! Tersedia ${available.toFixed(1)} kg.` };
+        // Kalkulasi HPP rata-rata dari batch yang akan terpakai (simulasi)
         const batches = await CFS.Inventory.getBatches();
         const now = new Date();
         const candidates = batches
             .filter(b => b.produk === productName && b.berat_sisa > 0 && new Date(b.tgl_kadaluarsa) > now)
-            .sort((a, b) => new Date(a.tgl_kadaluarsa) - new Date(b.tgl_kadaluarsa));
+            .sort((a, b) => settings.fifoMethod === 'fifo' ? new Date(a.created_at) - new Date(b.created_at) : new Date(a.tgl_kadaluarsa) - new Date(b.tgl_kadaluarsa));
         let remaining = qty;
         let totalHPP = 0;
         for (let b of candidates) {
@@ -59,12 +79,22 @@ CFS.Sales = {
         if (manualHarga && tier !== 'partai') hargaJual = manualHarga;
         const dppTotal = hargaJual * qty;
         const ppn = dppTotal * (settings.ppn / 100);
-        return { hargaJual, dppTotal, ppn, totalInvoice: dppTotal + ppn, hppAvg, available };
+        return {
+            hargaJual,
+            dppTotal,
+            ppn,
+            totalInvoice: dppTotal + ppn,
+            hppAvg,
+            available
+        };
     },
 
     async processSale(klien, productName, qty, tier, manualHarga = null) {
         const pricing = await this.calculatePricing(productName, qty, tier, manualHarga);
-        await CFS.Accounting.recordSale(klien, productName, qty, pricing.dppTotal, pricing.ppn, pricing.totalHPP);
+        // Catat jurnal
+        if (CFS.Accounting && CFS.Accounting.recordSale) {
+            await CFS.Accounting.recordSale(klien, productName, qty, pricing.dppTotal, pricing.ppn, pricing.totalHPP);
+        }
         const trx = {
             id: Date.now(),
             klien,
@@ -77,7 +107,8 @@ CFS.Sales = {
             usedBatches: pricing.usedBatches,
             tanggal: new Date().toISOString()
         };
-        const transactions = (await CFS.Storage.get(CFS.Storage.TRANSACTIONS_KEY)) || [];
+        // Simpan transaksi
+        const transactions = await CFS.Storage.get(CFS.Storage.TRANSACTIONS_KEY) || [];
         transactions.unshift(trx);
         await CFS.Storage.set(CFS.Storage.TRANSACTIONS_KEY, transactions);
         // Update CRM
@@ -85,8 +116,14 @@ CFS.Sales = {
         return pricing;
     },
 
+    async recordTransaction(trx) {
+        const transactions = await CFS.Storage.get(CFS.Storage.TRANSACTIONS_KEY) || [];
+        transactions.unshift(trx);
+        await CFS.Storage.set(CFS.Storage.TRANSACTIONS_KEY, transactions);
+    },
+
     async getTransactions() {
-        return (await CFS.Storage.get(CFS.Storage.TRANSACTIONS_KEY)) || [];
+        return await CFS.Storage.get(CFS.Storage.TRANSACTIONS_KEY) || [];
     },
 
     async getFilteredTransactions(filters = {}) {
@@ -96,59 +133,18 @@ CFS.Sales = {
         if (filters.startDate) trx = trx.filter(t => new Date(t.tanggal) >= new Date(filters.startDate));
         if (filters.endDate) trx = trx.filter(t => new Date(t.tanggal) <= new Date(filters.endDate));
         return trx;
-
-    // Di dalam CFS.Sales, setelah fungsi getFilteredTransactions
-renderCustomerTable: async function() {
-    const customers = await this.getCustomers();
-    const tbody = document.getElementById('crmTableBody');
-    if (!tbody) return;
-
-    if (customers.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="5" class="text-center p-4 opacity-50">Belum ada data pelanggan.</td></tr>';
-        return;
-    }
-
-    // Update stats
-    const totalPendapatan = customers.reduce((s, c) => s + c.totalPembelian, 0);
-    const now = new Date();
-    const thirtyDaysAgo = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 30);
-    const activeCustomers = customers.filter(c => new Date(c.terakhirBeli) > thirtyDaysAgo).length;
-
-    const statsTotal = document.getElementById('crmTotalCustomers');
-    const statsRevenue = document.getElementById('crmTotalRevenue');
-    const statsActive = document.getElementById('crmActiveCustomers');
-    if (statsTotal) statsTotal.textContent = customers.length;
-    if (statsRevenue) statsRevenue.textContent = CFS.Utils.formatRupiah(totalPendapatan);
-    if (statsActive) statsActive.textContent = activeCustomers;
-
-    tbody.innerHTML = customers
-        .sort((a, b) => new Date(b.terakhirBeli) - new Date(a.terakhirBeli))
-        .map(c => {
-            const lastBuy = new Date(c.terakhirBeli);
-            const daysSinceLastBuy = Math.floor((now - lastBuy) / (1000 * 60 * 60 * 24));
-            const status = daysSinceLastBuy > 30 ? '⚠️ Churn Risk' : '✅ Aktif';
-            const statusColor = daysSinceLastBuy > 30 ? 'text-red-600' : 'text-green-600';
-            return `<tr class="border-b hover:bg-slate-50 dark:hover:bg-slate-800">
-                <td class="p-2 font-medium">${c.nama}</td>
-                <td class="p-2 text-right">${CFS.Utils.formatRupiah(c.totalPembelian)}</td>
-                <td class="p-2 text-right">${c.totalTransaksi}</td>
-                <td class="p-2 text-right text-xs">${CFS.Utils.formatDate(c.terakhirBeli)}</td>
-                <td class="p-2 text-center"><span class="${statusColor} text-xs font-semibold">${status}</span></td>
-            </tr>`;
-        }).join('');
-}
     },
 
-    // --- CRM Functions ---
+    // ========== CRM Functions ==========
     async getCustomers() {
-        return (await CFS.Storage.get(CFS.Storage.CUSTOMERS_KEY)) || [];
+        return await CFS.Storage.get(this.CUSTOMERS_KEY) || [];
     },
 
     async saveCustomers(customers) {
-        await CFS.Storage.set(CFS.Storage.CUSTOMERS_KEY, customers);
+        await CFS.Storage.set(this.CUSTOMERS_KEY, customers);
     },
 
-    async upsertCustomer(klien, trx) {
+    async upsertCustomer(klien, transaksi) {
         const customers = await this.getCustomers();
         let customer = customers.find(c => c.nama.toLowerCase() === klien.toLowerCase());
         if (!customer) {
@@ -162,48 +158,49 @@ renderCustomerTable: async function() {
             };
             customers.push(customer);
         }
-        customer.totalPembelian += trx.totalInvoice;
+        customer.totalPembelian += transaksi.totalInvoice || 0;
         customer.totalTransaksi += 1;
         customer.terakhirBeli = new Date().toISOString();
-        if (!customer.produkFavorit[trx.produk]) customer.produkFavorit[trx.produk] = 0;
-        customer.produkFavorit[trx.produk] += trx.qty;
+        if (!customer.produkFavorit[transaksi.produk]) {
+            customer.produkFavorit[transaksi.produk] = 0;
+        }
+        customer.produkFavorit[transaksi.produk] += transaksi.qty || 0;
         await this.saveCustomers(customers);
+        return customer;
     },
 
-    async getCustomerAnalytics() {
-        const customers = await this.getCustomers();
-        const totalPendapatan = customers.reduce((s, c) => s + c.totalPembelian, 0);
-        const now = new Date();
-        const thirtyDaysAgo = new Date(now);
-        thirtyDaysAgo.setDate(now.getDate() - 30);
-        const activeCustomers = customers.filter(c => new Date(c.terakhirBeli) >= thirtyDaysAgo).length;
-        const topCustomers = customers.sort((a, b) => b.totalPembelian - a.totalPembelian).slice(0, 5);
-        const churnRisk = customers.filter(c => new Date(c.terakhirBeli) < thirtyDaysAgo).length;
-        return { totalPelanggan: customers.length, totalPendapatan, activeCustomers, topCustomers, churnRisk };
-    },
-
-    async renderCRMTable() {
+    async renderCustomerTable() {
         const customers = await this.getCustomers();
         const tbody = document.getElementById('crmTableBody');
         if (!tbody) return;
         if (customers.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="5" class="text-center p-4 opacity-50">Belum ada data pelanggan</td></tr>';
+            tbody.innerHTML = '<tr><td colspan="5" class="text-center p-4 opacity-50">Belum ada data pelanggan.</td></tr>';
             return;
         }
-        tbody.innerHTML = customers.sort((a, b) => b.totalPembelian - a.totalPembelian).map(c => {
-            const last = c.terakhirBeli ? new Date(c.terakhirBeli).toLocaleDateString('id-ID') : '-';
-            const now = new Date();
-            const daysSinceLast = c.terakhirBeli ? Math.floor((now - new Date(c.terakhirBeli)) / (1000*3600*24)) : Infinity;
-            const status = daysSinceLast <= 30 ? '<span class="badge bg-green-100 text-green-700">Aktif</span>' :
-                           (daysSinceLast <= 60 ? '<span class="badge bg-yellow-100 text-yellow-700">Jarang</span>' :
-                            '<span class="badge bg-red-100 text-red-700">Churn Risk</span>');
-            return `<tr class="border-b hover:bg-slate-50">
-                <td class="p-2 font-medium">${c.nama}</td>
-                <td class="p-2 text-right">${CFS.Utils.formatRupiah(c.totalPembelian)}</td>
-                <td class="p-2 text-right">${c.totalTransaksi}x</td>
-                <td class="p-2 text-right text-xs">${last}</td>
-                <td class="p-2 text-center">${status}</td>
-            </tr>`;
-        }).join('');
+        const now = new Date();
+        const thirtyDaysAgo = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 30);
+        const totalPendapatan = customers.reduce((s, c) => s + c.totalPembelian, 0);
+        const activeCustomers = customers.filter(c => new Date(c.terakhirBeli) > thirtyDaysAgo).length;
+        const statsTotal = document.getElementById('crmTotalCustomers');
+        const statsRevenue = document.getElementById('crmTotalRevenue');
+        const statsActive = document.getElementById('crmActiveCustomers');
+        if (statsTotal) statsTotal.textContent = customers.length;
+        if (statsRevenue) statsRevenue.textContent = CFS.Utils.formatRupiah(totalPendapatan);
+        if (statsActive) statsActive.textContent = activeCustomers;
+        tbody.innerHTML = customers
+            .sort((a, b) => new Date(b.terakhirBeli) - new Date(a.terakhirBeli))
+            .map(c => {
+                const lastBuy = new Date(c.terakhirBeli);
+                const daysSince = Math.floor((now - lastBuy) / (1000 * 60 * 60 * 24));
+                const status = daysSince > 30 ? '⚠️ Churn Risk' : '✅ Aktif';
+                const color = daysSince > 30 ? 'text-red-600' : 'text-green-600';
+                return `<tr class="border-b hover:bg-slate-50 dark:hover:bg-slate-800">
+                    <td class="p-2 font-medium">${c.nama}</td>
+                    <td class="p-2 text-right">${CFS.Utils.formatRupiah(c.totalPembelian)}</td>
+                    <td class="p-2 text-right">${c.totalTransaksi}</td>
+                    <td class="p-2 text-right text-xs">${CFS.Utils.formatDate(c.terakhirBeli)}</td>
+                    <td class="p-2 text-center"><span class="${color} text-xs font-semibold">${status}</span></td>
+                </tr>`;
+            }).join('');
     }
 };
