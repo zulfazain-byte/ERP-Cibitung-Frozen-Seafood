@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cibitung Frozen — ERP Ultimate v5.3</title>
+    <title>Cibitung Frozen — ERP Ultimate v5.4</title>
     <meta name="description" content="Sistem ERP manajemen inventori, penjualan, dan akuntansi Cibitung Frozen.">
     <meta name="theme-color" content="#2563eb">
     <meta name="application-name" content="CibitungFrozen ERP">
@@ -164,7 +164,7 @@
             </div>
             <div>
                 <span class="font-extrabold text-xl tracking-tight" style="color: var(--text);">Cibitung<span class="text-primary-600">Frozen</span></span>
-                <p class="text-[10px] uppercase font-bold tracking-widest opacity-50 -mt-1">ERP Ultimate v5.3</p>
+                <p class="text-[10px] uppercase font-bold tracking-widest opacity-50 -mt-1">ERP Ultimate v5.4</p>
             </div>
         </div>
         <!-- Status Indicator -->
@@ -232,23 +232,13 @@
                     Backup data setiap minggu untuk keamanan.
                 </p>
             </div>
-            <!-- Info Sistem -->
+            <!-- Info Ringkas (tanpa detail sistem) -->
             <div class="p-4 border-t mt-2" style="border-color: var(--border);">
-                <h4 class="text-xs font-bold uppercase tracking-wider opacity-50 mb-2">ℹ️ Info Sistem</h4>
-                <p class="text-xs opacity-50">Versi 5.3 · Build 2025</p>
-                <p class="text-xs opacity-50">Database: IndexedDB (lokal)</p>
+                <h4 class="text-xs font-bold uppercase tracking-wider opacity-50 mb-2">📌 Status Data</h4>
+                <p class="text-xs opacity-50">Batch: <span id="storedBatchesCount">-</span></p>
+                <p class="text-xs opacity-50">Transaksi: <span id="storedTransactionsCount">-</span></p>
+                <p class="text-xs opacity-50">Pelanggan: <span id="storedCustomersCount">-</span></p>
                 <p class="text-xs opacity-50">Mode: <span id="sidebar-mode">Terang</span></p>
-                <p class="text-xs opacity-50">Shortcut: <kbd>Ctrl+B</kbd> Backup</p>
-            </div>
-            <!-- Placeholder dekoratif: Storage Status -->
-            <div class="p-4 border-t mt-2" style="border-color: var(--border);">
-                <h4 class="text-xs font-bold uppercase tracking-wider opacity-50 mb-2">📦 Status Penyimpanan</h4>
-                <div class="text-xs opacity-50 space-y-1">
-                    <div class="flex justify-between"><span>Batch Tersimpan</span><span id="storedBatchesCount">-</span></div>
-                    <div class="flex justify-between"><span>Jurnal Tersimpan</span><span id="storedJournalsCount">-</span></div>
-                    <div class="flex justify-between"><span>Pelanggan</span><span id="storedCustomersCount">-</span></div>
-                    <div class="flex justify-between"><span>Total Ukuran</span><span id="storedTotalSize">-</span></div>
-                </div>
             </div>
         </div>
     </aside>
@@ -341,7 +331,7 @@
                     <p class="opacity-50">Belum ada aktivitas.</p>
                 </div>
             </div>
-            <!-- Widget 6: Top Produk (Placeholder) -->
+            <!-- Widget 6: Top Produk -->
             <div id="widget-topProducts" class="card p-6 fade-in">
                 <h3 class="font-semibold mb-4 flex items-center gap-2"><i class="ph ph-medal text-amber-600"></i> Top 5 Produk Terlaris</h3>
                 <div id="topProductsList" class="text-sm space-y-2">
@@ -445,7 +435,7 @@
                     <h4 class="font-semibold mb-2">📖 Panduan Alokasi Stok (FEFO)</h4>
                     <p class="opacity-70">Sistem otomatis memilih batch dengan tanggal kadaluarsa terdekat. Ubah metode di <strong>Pengaturan</strong>.</p>
                 </div>
-                <!-- Placeholder dekoratif: Status Gudang -->
+                <!-- Placeholder dekoratif: Suhu Gudang -->
                 <div class="mt-4 p-4 bg-slate-50 dark:bg-slate-800 rounded-lg text-sm flex items-center gap-2">
                     <i class="ph ph-thermometer-cold text-slate-400"></i>
                     <span class="opacity-60">Suhu Gudang Ideal: <strong>-18°C</strong> (pastikan cold storage berfungsi)</span>
@@ -556,7 +546,7 @@
                     <h3 class="font-semibold">Daftar Pelanggan</h3>
                     <button id="exportCustomersCSV" class="btn btn-sm btn-secondary"><i class="ph ph-file-csv"></i> Ekspor CSV</button>
                 </div>
-                <!-- Tabel Pelanggan -->
+                <!-- Tabel Pelanggan (dengan kolom aksi hapus) -->
                 <div class="overflow-x-auto">
                     <table class="w-full text-sm">
                         <thead>
@@ -670,7 +660,7 @@
                     <input type="date" id="filterStart"> <input type="date" id="filterEnd">
                     <button type="submit" class="btn btn-primary">Filter</button>
                 </form>
-                <!-- Tabel Riwayat -->
+                <!-- Tabel Riwayat dengan kolom aksi hapus -->
                 <div class="overflow-x-auto">
                     <table class="w-full text-sm">
                         <thead>
@@ -681,10 +671,11 @@
                                 <th class="p-2 text-right">Qty</th>
                                 <th class="p-2 text-right">Invoice</th>
                                 <th class="p-2 text-center">Tier</th>
+                                <th class="p-2 text-center">Aksi</th>
                             </tr>
                         </thead>
                         <tbody id="historyTableBody">
-                            <tr><td colspan="6" class="text-center p-4 opacity-50">Belum ada transaksi</td></tr>
+                            <tr><td colspan="7" class="text-center p-4 opacity-50">Belum ada transaksi</td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -711,6 +702,10 @@
                 <div class="mt-4 card p-4">
                     <h3 class="font-semibold mb-2 flex items-center gap-2"><i class="ph ph-chart-line text-blue-500"></i> Grafik Riwayat Pendapatan (30 Hari)</h3>
                     <canvas id="chartHistoryRevenue" height="150"></canvas>
+                </div>
+                <!-- Tombol Hapus Semua Riwayat (Dekoratif) -->
+                <div class="mt-4 flex justify-end">
+                    <button id="clearAllHistoryBtn" class="btn btn-danger btn-sm"><i class="ph ph-trash"></i> Hapus Semua Riwayat</button>
                 </div>
                 <!-- Placeholder dekoratif: Rekomendasi -->
                 <div class="mt-4 p-4 bg-slate-50 dark:bg-slate-800 rounded-lg text-sm flex items-center gap-2">
@@ -868,7 +863,7 @@
 <!-- ==================== FOOTER ==================== -->
 <footer class="border-t mt-auto py-4" style="background: var(--surface); border-color: var(--border);">
     <div class="container-main text-center text-xs opacity-50">
-        <p>&copy; 2025 <strong>Cibitung Frozen</strong> — ERP Ultimate v5.3</p>
+        <p>&copy; 2025 <strong>Cibitung Frozen</strong> — ERP Ultimate v5.4</p>
     </div>
 </footer>
 
