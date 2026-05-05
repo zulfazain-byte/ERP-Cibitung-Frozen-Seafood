@@ -127,8 +127,6 @@
         .tooltip:hover .tooltip-text { visibility: visible; opacity: 1; }
         .widget-toggle-label { transition: all 0.3s ease; }
         .widget-toggle-label:hover { transform: scale(1.05); color: var(--accent); }
-
-        /* Tambahan animasi dan dekorasi */
         .shimmer { background: linear-gradient(90deg, var(--border) 25%, transparent 50%, var(--border) 75%); background-size: 200% 100%; animation: shimmerAnim 1.5s infinite; }
         @keyframes shimmerAnim { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
         .fade-in { animation: fadeInUp 0.4s ease forwards; }
@@ -231,7 +229,7 @@
                 <h4 class="text-xs font-bold uppercase tracking-wider opacity-50 mb-2">💡 Tips Cepat</h4>
                 <p class="text-xs opacity-60 leading-relaxed">
                     Gunakan <strong>FEFO</strong> untuk produk frozen agar batch terdekat expired terjual lebih dulu.
-                    Backup data setiap minggu.
+                    Backup data setiap minggu untuk keamanan.
                 </p>
             </div>
             <!-- Info Sistem -->
@@ -241,6 +239,16 @@
                 <p class="text-xs opacity-50">Database: IndexedDB (lokal)</p>
                 <p class="text-xs opacity-50">Mode: <span id="sidebar-mode">Terang</span></p>
                 <p class="text-xs opacity-50">Shortcut: <kbd>Ctrl+B</kbd> Backup</p>
+            </div>
+            <!-- Placeholder dekoratif: Storage Status -->
+            <div class="p-4 border-t mt-2" style="border-color: var(--border);">
+                <h4 class="text-xs font-bold uppercase tracking-wider opacity-50 mb-2">📦 Status Penyimpanan</h4>
+                <div class="text-xs opacity-50 space-y-1">
+                    <div class="flex justify-between"><span>Batch Tersimpan</span><span id="storedBatchesCount">-</span></div>
+                    <div class="flex justify-between"><span>Jurnal Tersimpan</span><span id="storedJournalsCount">-</span></div>
+                    <div class="flex justify-between"><span>Pelanggan</span><span id="storedCustomersCount">-</span></div>
+                    <div class="flex justify-between"><span>Total Ukuran</span><span id="storedTotalSize">-</span></div>
+                </div>
             </div>
         </div>
     </aside>
@@ -333,7 +341,7 @@
                     <p class="opacity-50">Belum ada aktivitas.</p>
                 </div>
             </div>
-            <!-- Widget 6: Top Produk -->
+            <!-- Widget 6: Top Produk (Placeholder) -->
             <div id="widget-topProducts" class="card p-6 fade-in">
                 <h3 class="font-semibold mb-4 flex items-center gap-2"><i class="ph ph-medal text-amber-600"></i> Top 5 Produk Terlaris</h3>
                 <div id="topProductsList" class="text-sm space-y-2">
@@ -432,10 +440,15 @@
                     <button type="submit" class="btn btn-primary col-span-full sm:col-span-1">💾 Simpan Batch</button>
                 </form>
                 <button onclick="document.getElementById('batchDetailModal').classList.remove('hidden')" class="text-blue-600 text-sm underline mt-3">📦 Lihat Semua Batch (Detail)</button>
-                <!-- Panduan FEFO -->
+                <!-- Panduan FEFO (Dekoratif) -->
                 <div class="mt-6 p-4 bg-slate-50 dark:bg-slate-800 rounded-lg text-sm">
                     <h4 class="font-semibold mb-2">📖 Panduan Alokasi Stok (FEFO)</h4>
-                    <p class="opacity-70">Sistem secara otomatis akan memilih batch dengan tanggal kadaluarsa terdekat saat mencatat penjualan. Anda dapat mengubah metode alokasi di <strong>Pengaturan</strong>.</p>
+                    <p class="opacity-70">Sistem otomatis memilih batch dengan tanggal kadaluarsa terdekat. Ubah metode di <strong>Pengaturan</strong>.</p>
+                </div>
+                <!-- Placeholder dekoratif: Status Gudang -->
+                <div class="mt-4 p-4 bg-slate-50 dark:bg-slate-800 rounded-lg text-sm flex items-center gap-2">
+                    <i class="ph ph-thermometer-cold text-slate-400"></i>
+                    <span class="opacity-60">Suhu Gudang Ideal: <strong>-18°C</strong> (pastikan cold storage berfungsi)</span>
                 </div>
             </div>
         </div>
@@ -491,6 +504,11 @@
                 <div class="mt-4 p-4 bg-emerald-50 dark:bg-emerald-900/20 rounded-lg text-sm">
                     <h4 class="font-semibold mb-2">💡 Tips Margin</h4>
                     <p class="opacity-80">Margin default dapat diubah di <strong>Pengaturan</strong>. Untuk partai besar, Anda bisa memasukkan harga manual sesuai negosiasi.</p>
+                </div>
+                <!-- Placeholder dekoratif: Metode Pembayaran -->
+                <div class="mt-4 p-4 bg-slate-50 dark:bg-slate-800 rounded-lg text-sm flex items-center gap-2">
+                    <i class="ph ph-credit-card text-slate-400"></i>
+                    <span class="opacity-60">Metode Pembayaran yang didukung: <strong>Tunai, Transfer, QRIS</strong> (invoice akan mencatat DPP + PPN)</span>
                 </div>
             </div>
         </div>
@@ -555,6 +573,11 @@
                             <tr><td colspan="6" class="text-center p-4 opacity-50">Belum ada data pelanggan</td></tr>
                         </tbody>
                     </table>
+                </div>
+                <!-- Placeholder dekoratif: Catatan CRM -->
+                <div class="mt-4 p-4 bg-slate-50 dark:bg-slate-800 rounded-lg text-sm flex items-center gap-2">
+                    <i class="ph ph-info text-slate-400"></i>
+                    <span class="opacity-60">Segmentasi otomatis: <strong>Top</strong> (pembelian > 10 jt), <strong>Regular</strong> (2-10 jt), <strong>New</strong> (pertama kali), <strong>Churn</strong> (tidak beli 30 hari).</span>
                 </div>
             </div>
         </div>
@@ -628,6 +651,11 @@
                     <h4 class="font-semibold mb-2 flex items-center gap-2"><i class="ph ph-scales text-amber-600"></i> Catatan Pajak</h4>
                     <p class="opacity-80">PPN dihitung otomatis dari DPP. PPh 25 dan PPh 21 dihitung dari laba bersih. Pastikan pengaturan pajak sudah benar di tab <strong>Pengaturan</strong>.</p>
                 </div>
+                <!-- Placeholder dekoratif: Status Keuangan -->
+                <div class="mt-4 p-4 bg-slate-50 dark:bg-slate-800 rounded-lg text-sm flex items-center gap-2">
+                    <i class="ph ph-chart-pie-slice text-slate-400"></i>
+                    <span class="opacity-60">Analisis: <strong>Rasio Laba Kotor</strong> menunjukkan efisiensi operasional. Pantau secara berkala.</span>
+                </div>
             </div>
         </div>
 
@@ -684,6 +712,11 @@
                     <h3 class="font-semibold mb-2 flex items-center gap-2"><i class="ph ph-chart-line text-blue-500"></i> Grafik Riwayat Pendapatan (30 Hari)</h3>
                     <canvas id="chartHistoryRevenue" height="150"></canvas>
                 </div>
+                <!-- Placeholder dekoratif: Rekomendasi -->
+                <div class="mt-4 p-4 bg-slate-50 dark:bg-slate-800 rounded-lg text-sm flex items-center gap-2">
+                    <i class="ph ph-target text-slate-400"></i>
+                    <span class="opacity-60">Tips: Gunakan filter untuk melihat performa produk tertentu dalam rentang waktu yang spesifik.</span>
+                </div>
             </div>
         </div>
 
@@ -736,6 +769,11 @@
                         <li><strong>Margin:</strong> Selisih total invoice dengan HPP per produk.</li>
                         <li><strong>Proyeksi:</strong> Estimasi pendapatan 3 bulan ke depan berdasarkan rata-rata historis.</li>
                     </ul>
+                </div>
+                <!-- Placeholder dekoratif: Perbandingan Industri -->
+                <div class="mt-4 p-4 bg-slate-50 dark:bg-slate-800 rounded-lg text-sm flex items-center gap-2">
+                    <i class="ph ph-globe text-slate-400"></i>
+                    <span class="opacity-60">Benchmark: Margin kotor ideal untuk industri frozen food adalah 25–40%.</span>
                 </div>
             </div>
         </div>
@@ -815,6 +853,12 @@
                     <p class="text-sm opacity-70">Data Anda disimpan di browser. Lakukan backup manual secara berkala menggunakan tombol di pojok kanan atas, atau gunakan <kbd>Ctrl+B</kbd>.</p>
                     <button onclick="CFS.App.backupData()" class="btn btn-primary mt-2"><i class="ph ph-download-simple"></i> Backup Sekarang</button>
                 </div>
+
+                <!-- Placeholder dekoratif: Tanggal & Jam Sistem -->
+                <div class="mt-6 p-4 bg-slate-50 dark:bg-slate-800 rounded-lg text-sm flex items-center gap-2">
+                    <i class="ph ph-clock-countdown text-slate-400"></i>
+                    <span class="opacity-60">Waktu sistem: <span id="systemDateTime">-</span></span>
+                </div>
             </div>
         </div>
 
@@ -854,10 +898,17 @@
             document.getElementById('sidebar-mode').textContent = 'Gelap';
         }
     })();
+    function updateSystemTime() {
+        const now = new Date();
+        const el = document.getElementById('systemDateTime');
+        if (el) el.textContent = now.toLocaleString('id-ID', { weekday:'long', day:'numeric', month:'long', year:'numeric', hour:'2-digit', minute:'2-digit', second:'2-digit' });
+    }
     setInterval(() => {
         const el = document.getElementById('lastUpdate');
         if (el) el.textContent = new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
-    }, 30000);
+        updateSystemTime();
+    }, 1000);
+    updateSystemTime();
 </script>
 </body>
 </html>
